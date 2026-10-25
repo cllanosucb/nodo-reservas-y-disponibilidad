@@ -1,59 +1,26 @@
 # 05 · Context map: Reservas y disponibilidad
 
 > **Proyecto:** Nodo (coworking y eventos) · **Área:** Reservas y disponibilidad (core)
-> **Alcance de esta entrega (Sesión 3):** nuestra área al centro y sus relaciones con las áreas vecinas. Las líneas son **simples, sin tipo ni dirección**: el patrón de integración con nombre (y quién manda sobre quién) se decide en la **Sesión 4**.
+> **Alcance:** nuestra área al centro y sus relaciones con las áreas vecinas. Las líneas son **simples, sin tipo ni dirección**: cada una indica qué dato o evento cruza.
 
 ---
 
 ## Vista general del mapa
 
-```mermaid
-flowchart LR
-    subgraph AREA["ÁREA: RESERVAS Y DISPONIBILIDAD (core · propia)"]
-        direction TB
-        DISP["<b>Disponibilidad</b><br/>franjas libres, margen de 15 min,<br/>bloqueos de sala"]
-        RES["<b>Reserva</b><br/>solicitud, confirmación, reserva asistida,<br/>cancelación, lista de espera"]
-        DISP ---|"① ocupar / liberar franja"| RES
-    end
-
-    ESP["<b>Espacios / catálogo</b><br/>(vecino de Nodo)"]
-    EVT["<b>Eventos</b><br/>salón de eventos<br/>(vecino de Nodo)"]
-    COM["<b>Comercial / cotizaciones</b><br/>(vecino de Nodo)"]
-    MEM["<b>Membresías</b><br/>(vecino de Nodo)"]
-    FAC["<b>Facturación</b><br/>(genérico · externo)"]
-    NOT["<b>Notificaciones</b><br/>WhatsApp / correo<br/>(transversal · genérico)"]
-    IDA["<b>Identidad / acceso</b><br/>(transversal · genérico)"]
-
-    ESP ---|"② recursos reservables"| DISP
-    EVT ---|"③ uso de espacios compartidos"| DISP
-    COM ---|"④ reserva mensual cotizada"| RES
-    MEM ---|"⑤ miembro al día · horas incluidas"| RES
-    RES ---|"⑥ horas extra · penalizaciones"| FAC
-    RES ---|"⑦ confirmación · recordatorio"| NOT
-    RES ---|"⑧ lista de espera"| NOT
-    IDA ---|"⑨ quién es y con qué rol"| RES
-
-    classDef propio fill:#FDBA74,stroke:#C2410C,stroke-width:2px,color:#1F2937
-    classDef vecino fill:#BFDBFE,stroke:#1D4ED8,color:#1F2937
-    classDef generico fill:#E5E7EB,stroke:#6B7280,stroke-dasharray:5 5,color:#1F2937
-    classDef transversal fill:#DDD6FE,stroke:#6D28D9,stroke-dasharray:5 5,color:#1F2937
-
-    class DISP,RES propio
-    class ESP,EVT,COM,MEM vecino
-    class FAC generico
-    class NOT,IDA transversal
-```
+![Context map de Reservas y disponibilidad](img/05-context-map.png)
 
 **Cómo leer el mapa**
 
-| Color | Tipo de vecino | Qué significa para nosotros |
+| Forma en el mapa | Tipo | Qué significa para nosotros |
 |---|---|---|
-| 🟧 Naranja, borde sólido | **Propio** | Bounded contexts de nuestra área. Los modelamos nosotros (Sesiones 5 y 6). |
-| 🟦 Azul | **Vecino de Nodo** | Otra área del negocio, con su propio modelo y equipo. Hay que acordar qué cruza la frontera. |
-| ⬜ Gris, borde punteado | **Externo (genérico)** | No diferencia a Nodo; se integra o se compra (software de facturación). |
-| 🟪 Lila, borde punteado | **Transversal** | Lo usan todas las áreas, no solo la nuestra (avisos, identidad). Ninguna área es su dueña exclusiva. |
+| Recuadro naranja claro con borde naranja oscuro | **Área core** | Reservas y disponibilidad, nuestra área. |
+| Cajas blancas con borde naranja, dentro del área | **Propio** | Los dos bounded contexts del área: Disponibilidad y Reserva. Los modelamos nosotros (Sesiones 5 y 6). |
+| Caja blanca con borde gris continuo | **Vecino (supporting)** | Otra área del negocio de Nodo, con su propio modelo: Espacios y recursos, Membresías y planes, Tarifas y precios. Hay que acordar qué cruza la frontera. |
+| Caja gris con borde punteado | **Externo (generic)** | No diferencia a Nodo; se integra: Facturación y cobros, Control de acceso físico. |
+| Franja gris con borde punteado, al pie del mapa | **Transversal (generic)** | Lo usan todas las áreas, no solo la nuestra: Notificaciones. |
+| Línea simple con número ①–⑨ | **Relación** | Qué dato o evento cruza. Sin tipo ni dirección. |
 
-Los números ①–⑨ de cada línea remiten a la tabla de la sección 3, donde se detalla **qué cruza** por esa relación.
+Cada número ①–⑨ tiene su detalle en [Qué cruza cada relación](#3-qué-cruza-cada-relación). Los nombres son los de [01-subdominios.md](01-subdominios.md) y los términos, los de [02-glosario.md](02-glosario.md).
 
 ---
 
@@ -62,100 +29,101 @@ Los números ①–⑨ de cada línea remiten a la tabla de la sección 3, donde
 Este mapa sirve para:
 
 - **Ubicar nuestra frontera:** qué decide nuestra área y qué solo consulta o dispara hacia otras.
-- **Listar qué cruza cada línea** (qué pedimos y qué entregamos), que es el insumo de la Sesión 4.
+- **Listar qué cruza cada línea** (qué pedimos y qué entregamos).
 - **Dejar a la vista dónde habrá que protegerse o negociar**: los hotspots de integración, marcados como **HI-xx**.
 
 ---
 
 ## 2. Nuestra área por dentro: dos contextos
 
-La justificación de la frontera está en `decisiones/0001-por-que-esta-frontera.md`. Aquí solo se resume lo que importa para el mapa:
+La justificación de la frontera está en [decisiones/0001-por-que-esta-frontera.md](../decisiones/0001-por-que-esta-frontera.md). Aquí se resume lo que importa para el mapa:
 
 | Contexto | Qué decide | Pregunta que responde | Lenguaje propio |
 |---|---|---|---|
-| **Disponibilidad** | Si una franja de un recurso se puede ocupar | «¿Está libre la Sala B el jueves de 10:00 a 11:00?» | franja, margen, bloqueo, ocupación, franja liberada, salas disponibles |
-| **Reserva** | Si una solicitud de una persona se convierte en reserva y qué pasa con ella después | «¿Puede Ana reservarla, y qué pasa si cancela?» | solicitud, reserva confirmada, reserva asistida, anticipación, cancelación, penalización, lista de espera |
+| **Disponibilidad** | Si una franja de una sala de reunión se puede ocupar | «¿Está libre la Sala B el jueves de 10:00 a 11:00?» | sala de reunión, recurso reservable, franja, margen, bloqueo, disponibilidad, franja liberada, salas disponibles |
+| **Reserva** | Si una solicitud de una persona se convierte en reserva y qué pasa con ella después | «¿Puede Ana reservarla, y qué pasa si cancela?» | solicitud de reserva, reserva, confirmada, anticipación, reserva asistida, miembro al día, visitante, invitado, aforo, cancelación, penalización, horas extra, lista de espera |
 
-**Por qué la línea ① es la más importante del mapa:** la regla sagrada («nunca dos reservas en la misma franja», R-01) vive en **Disponibilidad**, pero la reserva nace en **Reserva**. Que esas dos cosas se mantengan siempre de acuerdo es el principal desafío de integración de nuestra área (ver HI-01).
+**Por qué la línea ① es la más importante del mapa:** la regla «nunca dos reservas en la misma franja» (R-01) vive en **Disponibilidad**, pero la reserva nace en **Reserva**. Que las dos se mantengan siempre de acuerdo, incluso cuando dos personas piden la última franja a la vez, es el principal desafío de integración del área (HI-01).
 
 ---
 
 ## 3. Qué cruza cada relación
 
-Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o evento** concreto que viaja y el **hotspot de integración** que queda para la Sesión 4. Los nombres de eventos y los códigos R/P/H son los de `03-eventstorming.md`.
+Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o evento** concreto que viaja y los **hotspots de integración**. Los nombres de eventos y los códigos R/P/H son los de [03-eventstorming.md](03-eventstorming.md).
 
 ### ① Disponibilidad ↔ Reserva (interna, propia)
 
 | | |
 |---|---|
-| **Reserva le pide a Disponibilidad** | «¿Está libre esta franja de este recurso, respetando el margen de 15 min y los bloqueos?» y, si lo está, **ocuparla** para la reserva. |
-| **Disponibilidad le entrega a Reserva** | La respuesta (libre / ocupada) y el aviso **Franja liberada**, para que Reserva mire su lista de espera. |
-| **Datos que cruzan** | recurso, fecha, hora de inicio, hora de fin, identificador de la reserva que la ocupa. |
-| **Eventos que cruzan** | Reserva confirmada → ocupa la franja · Reserva cancelada → **Franja liberada** · **Sala bloqueada** → cambia lo que se puede reservar. |
-| **Hotspots de integración** | **HI-01** (de H-03): si dos personas piden la última franja a la vez, ¿quién la «toma» primero, Disponibilidad o Reserva? Si se confirma la reserva y luego no se puede ocupar la franja, ¿se deshace? · **HI-02** (de H-02): si se bloquea una franja que ya tiene reserva, ¿Disponibilidad avisa a Reserva para que la cancele o el bloqueo se rechaza? |
+| **Reserva le pide a Disponibilidad** | «¿Está libre esta franja de esta sala, respetando el margen de 15 min y los bloqueos?» y, si lo está, **ocuparla** para la reserva. |
+| **Disponibilidad le entrega a Reserva** | La respuesta (libre / ocupada), **Franja liberada** para que Reserva avise a la lista de espera, y **Sala bloqueada** cuando la franja bloqueada tenía una reserva confirmada. |
+| **Datos que cruzan** | sala, fecha, hora de inicio, hora de fin, identificador de la reserva que la ocupa. |
+| **Eventos que cruzan** | Reserva confirmada → ocupa la franja · Reserva cancelada → {P-07} → **Franja liberada** · Solicitud expirada (visitante sin pago, P-11) → **Franja liberada** · **Sala bloqueada** → {P-09} → Resolver reserva afectada → **Reserva reasignada** / **Reserva reprogramada** / **Reembolso solicitado**. |
+| **Hotspots resueltos** | **HI-01:** si dos personas piden la última franja a la vez, la agenda de la sala garantiza aislamiento transaccional: se confirma una sola solicitud y la otra se rechaza o entra en la lista de espera (H-03). |
 
-### ② Espacios / catálogo ↔ Disponibilidad
-
-| | |
-|---|---|
-| **Le pedimos** | El catálogo de **recursos reservables**: salas y escritorios flexibles, con su capacidad y, si existe, su horario de uso. Disponibilidad no crea salas: las recibe. |
-| **Le entregamos** | Ocupación por recurso (qué tan usada está cada sala), si Espacios la necesita para decidir. |
-| **Datos que cruzan** | identificador del recurso, tipo (sala / escritorio flexible / escritorio fijo), capacidad, estado (activo / dado de baja). |
-| **Hotspots de integración** | **HI-03** (de H-01): ¿quién bloquea una sala por mantenimiento, Espacios o Disponibilidad? Hoy lo hace «recepción o administración». · **HI-04**: si Espacios da de baja una sala con reservas futuras, ¿qué pasa con ellas? · **HI-05**: los escritorios **fijos** vienen del mismo catálogo pero **no** se reservan por franja; Disponibilidad debe ignorarlos. |
-
-### ③ Eventos ↔ Disponibilidad
+### ② Espacios y recursos ↔ Disponibilidad
 
 | | |
 |---|---|
-| **Le pedimos** | Saber cuándo un evento usa una sala o un espacio que también se ofrece para reservas, para tratarlo como ocupado. |
-| **Le entregamos** | Las franjas libres de las salas compartidas, si un evento necesita salas además del salón. |
-| **Datos que cruzan** | espacio, fecha, horario del evento (incluido montaje y desmontaje, si aplica). |
-| **Hotspots de integración** | **HI-06**: ¿el salón de eventos y las salas comparten algún espacio, o están separados? Si están separados, esta línea casi no tiene tráfico. · **HI-07**: si un evento y una reserva quieren la misma sala, ¿quién tiene prioridad? · **Polisemia:** para Eventos, «reserva» es la del salón para un evento (con cotización y pago); para nosotros es una franja de sala o escritorio. Y «evento» en Nodo es un acto en el salón, no un evento de dominio. |
+| **Le pedimos** | El catálogo de **salas de reunión** reservables. Disponibilidad no crea salas: las recibe. |
+| **Le entregamos** | Nada. |
+| **Datos que cruzan** | identificador de la sala y tipo de recurso. Los escritorios (flexibles y fijos) y el salón están en el catálogo, pero no se reservan en nuestra área. |
+| **Hotspots resueltos** | **HI-04:** si Espacios y recursos da de baja una sala con reservas futuras, se trata igual que un bloqueo: se reasigna a una sala equivalente, se reprograma o se reembolsa. |
 
-### ④ Comercial / cotizaciones ↔ Reserva
-
-| | |
-|---|---|
-| **Le pedimos** | La **cotización aceptada** que se convierte en **reserva mensual** (recurrente): recurso, días, horario, vigencia. |
-| **Le entregamos** | Si esas franjas están libres (vía Disponibilidad), para que Comercial no cotice algo que no se puede cumplir. |
-| **Datos que cruzan** | cliente, recurso, patrón de recurrencia (p. ej. «martes y jueves 9:00–12:00»), fecha de inicio y fin. |
-| **Hotspots de integración** | **HI-08**: ¿una franja queda apartada mientras la cotización está pendiente, o solo cuando se acepta? · **HI-09**: ¿la reserva mensual cumple las mismas reglas (margen de 15 min, anticipación) que una reserva normal? · **HI-10**: si una de las fechas de la serie ya está ocupada, ¿se rechaza toda la serie o solo esa fecha? |
-
-### ⑤ Membresías ↔ Reserva
+### ③ Espacios y recursos ↔ Reserva
 
 | | |
 |---|---|
-| **Le pedimos** | Si el miembro **está al día** (R-02) y cuántas **horas incluidas** tiene su plan en el periodo (P-04). |
+| **Le pedimos** | El **aforo** de cada sala de reunión, para verificar que los asistentes de una reserva no lo superen (R-04). |
+| **Le entregamos** | Nada. |
+| **Datos que cruzan** | identificador de la sala y aforo. |
+| **Hotspots resueltos** | Ninguno. |
+
+### ④ Tarifas y precios ↔ Reserva
+
+| | |
+|---|---|
+| **Le pedimos** | El **precio vigente de la franja** al confirmar la reserva: la reserva lo conserva aunque la dirección cambie la tarifa después. También la **cotización de una reserva mensual** cuando el cliente la acepta. |
+| **Le entregamos** | Nada. |
+| **Datos que cruzan** | sala, franja, precio vigente; para la reserva mensual: cliente, sala, días y horario, vigencia de la cotización. |
+| **Reglas que cruzan** | La cotización vence a los 4 días si no se confirma con pago o depósito, y **no aparta la franja** mientras está vigente. |
+| **Hotspots resueltos** | **HI-09:** cada fecha de la reserva mensual cumple las mismas reglas que una reserva normal (margen de 15 min, aforo y anticipación). · **HI-10:** si una fecha de la serie ya está ocupada, se confirman las fechas libres y recepción coordina otra sala u horario para la ocupada. |
+
+### ⑤ Membresías y planes ↔ Reserva
+
+| | |
+|---|---|
+| **Le pedimos** | Si el miembro **está al día** al momento de confirmar (R-02) y cuántas **horas incluidas** tiene su plan (P-04). |
 | **Le entregamos** | Las horas **consumidas**: cada **Reserva confirmada** y cada **Reserva cancelada** cambia lo que el miembro lleva usado. |
-| **Datos que cruzan** | identificador del miembro, estado (al día / vencido / con deuda), plan, horas incluidas, horas usadas en el mes. |
-| **Hotspots de integración** | **HI-11** (de H-05): si el plan vence entre la solicitud y la confirmación, ¿qué estado vale? ¿Y si vence entre la confirmación y el día de la reserva? · **HI-12**: ¿quién lleva la cuenta de horas usadas, Membresías o Reserva? Si las cuenta Reserva, duplica algo que «pertenece» a Membresías. · **HI-13**: si Membresías no responde, ¿se confirma igual o se espera? · **Polisemia:** «miembro» para Membresías es el titular de un plan; para Reserva es quien reserva (y puede ser un **visitante** sin membresía, H-11). |
+| **Datos que cruzan** | identificador del miembro, estado (activo, al día), plan, horas incluidas, horas usadas. |
+| **Hotspots resueltos** | **HI-12:** la cuenta de horas usadas la lleva Membresías y planes; Reserva le informa cada reserva confirmada o cancelada. · **HI-13:** si Membresías y planes no responde, la solicitud pasa a recepción, que verifica el estado y la registra como reserva asistida. |
 
-### ⑥ Reserva ↔ Facturación
+### ⑥ Reserva ↔ Facturación y cobros
 
 | | |
 |---|---|
-| **Le pedimos** | Nada para decidir. Reserva no cobra ni calcula montos. |
-| **Le entregamos** | **Horas extra registradas** (P-04) y **Penalización aplicada** (P-05), para el cobro a fin de mes. |
-| **Datos que cruzan** | miembro, reserva, franja, horas extra, motivo de la penalización, momento de la cancelación. |
-| **Hotspots de integración** | **HI-14** (de H-08): la penalización ¿es el 10–20 % o la franja completa? ¿Quién calcula el monto: Reserva (envía el monto) o Facturación (recibe el hecho y aplica su tarifa)? · **HI-15**: si recepción cancela en nombre del miembro, ¿a quién se le cobra? · **Polisemia:** «penalización» para nosotros es un **hecho** (canceló tarde); para Facturación es un **cargo** con monto. |
+| **Le pedimos** | Que registre el **pago por adelantado** del visitante: ese hecho dispara la confirmación de su reserva (P-10). |
+| **Le entregamos** | **Penalización aplicada** (cobro de la franja completa, P-05), **Horas extra registradas** (sobre las incluidas o por exceso de tiempo, P-04 y R-06) y **Reembolso solicitado** (reserva afectada por un bloqueo, P-09). |
+| **Datos que cruzan** | persona (miembro o visitante), reserva, franja, horas extra, motivo del cobro o del reembolso. |
+| **Hotspots resueltos** | **HI-14:** el monto de la franja completa lo calcula Facturación y cobros con el precio conservado que envía Reserva. |
 
 ### ⑦ y ⑧ Reserva ↔ Notificaciones
 
 | | |
 |---|---|
-| **Le pedimos** | Que envíe el aviso por el canal del miembro (WhatsApp o correo). Nosotros no redactamos ni enviamos mensajes. |
-| **Le entregamos** | ⑦ desde Reserva: **Reserva confirmada** (→ Confirmación enviada) y la fecha para el **recordatorio del día antes** (P-03). ⑧ cuando Disponibilidad avisa **Franja liberada**, Reserva revisa su lista de espera y entrega a quiénes avisar (P-06). Disponibilidad no habla con Notificaciones: no sabe quién espera. |
-| **Datos que cruzan** | destinatario, tipo de aviso, recurso, fecha y hora. |
-| **Hotspots de integración** | **HI-16** (de H-07): ¿se avisa a toda la lista de espera o por orden de llegada? Eso lo decide Reserva, no Notificaciones. · **HI-17**: ¿quién programa el recordatorio del día antes, Reserva (lo dispara a la hora) o Notificaciones (recibe la fecha y lo agenda)? · **HI-18**: si la reserva se cancela después de programado el recordatorio, ¿cómo se anula? |
+| **Le pedimos** | Que envíe el aviso por WhatsApp o correo. Nosotros no redactamos ni enviamos mensajes. |
+| **Le entregamos** | ⑦ **Reserva confirmada** (→ Confirmación enviada), la fecha para el **recordatorio del día antes** (P-03) y **Solicitud rechazada** (P-08). ⑧ Cuando Disponibilidad avisa **Franja liberada**, Reserva entrega la lista de espera de esa franja: se avisa a **todos** (P-06). Disponibilidad no habla con Notificaciones: no sabe quién espera. |
+| **Datos que cruzan** | destinatario, tipo de aviso, sala, fecha y hora. |
+| **Hotspots resueltos** | **HI-17:** el recordatorio lo programa Notificaciones con la fecha que envía Reserva al confirmar. · **HI-18:** si la reserva se cancela, Notificaciones escucha *Reserva cancelada* y anula el recordatorio pendiente. |
 
-### ⑨ Identidad / acceso ↔ Reserva
+### ⑨ Control de acceso físico ↔ Reserva
 
 | | |
 |---|---|
-| **Le pedimos** | Quién hace la acción y con qué **rol**: miembro, visitante, recepción o administración. Lo necesitamos para saber si puede reservar a nombre de otro (reserva asistida) o bloquear salas. |
-| **Le entregamos** | Las reservas del día, si control de ingreso necesita saber quién viene a qué sala (sobre todo visitantes). |
-| **Datos que cruzan** | identificador de la persona, rol, a nombre de quién actúa. |
-| **Hotspots de integración** | **HI-19** (de H-11): ¿un visitante necesita cuenta para reservar o lo registra recepción? · **HI-20**: ¿la reserva le da acceso al edificio a un visitante, o es un permiso aparte? |
+| **Le pedimos** | Quién actúa y con qué **rol** (miembro, visitante, recepción, administración, dirección u operaciones), para saber si puede registrar una reserva asistida, bloquear una sala o resolver una reserva afectada. |
+| **Le entregamos** | Las **reservas del día**: para Control de acceso físico, una reserva es una autorización temporal de entrada. El visitante entra con apertura manual o un código temporal que genera recepción. El día de la reserva, Control de acceso físico valida si el miembro está al día; si no lo está, la puerta no abre y recepción revisa el caso. |
+| **Datos que cruzan** | identificador de la persona, rol, a nombre de quién actúa, sala y horario. |
+| **Hotspots resueltos** | Ninguno. |
 
 ---
 
@@ -163,21 +131,21 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 
 | # | Vecino | Tipo | Contexto nuestro que toca | Qué le pedimos | Qué le entregamos |
 |---|---|---|---|---|---|
-| ① | Disponibilidad ↔ Reserva | Propio | ambos | ocupar / liberar una franja | Franja liberada |
-| ② | Espacios / catálogo | Vecino | Disponibilidad | recursos reservables | ocupación por recurso |
-| ③ | Eventos | Vecino | Disponibilidad | uso de espacios compartidos | franjas libres |
-| ④ | Comercial / cotizaciones | Vecino | Reserva | cotización aceptada (reserva mensual) | si las franjas están libres |
-| ⑤ | Membresías | Vecino | Reserva | miembro al día, horas incluidas | horas consumidas |
-| ⑥ | Facturación | Genérico | Reserva | — | horas extra, penalización |
-| ⑦ | Notificaciones | Transversal | Reserva | enviar el aviso | confirmación, recordatorio |
-| ⑧ | Notificaciones | Transversal | Reserva (tras Franja liberada) | enviar el aviso | a quiénes avisar de la lista de espera |
-| ⑨ | Identidad / acceso | Transversal | Reserva | quién es y su rol | reservas del día |
+| ① | Disponibilidad ↔ Reserva | Propio | ambos | ocupar / liberar una franja | Franja liberada, Sala bloqueada |
+| ② | Espacios y recursos | Supporting | Disponibilidad | salas de reunión reservables | — |
+| ③ | Espacios y recursos | Supporting | Reserva | aforo de cada sala | — |
+| ④ | Tarifas y precios | Supporting | Reserva | precio vigente de la franja, cotización de reserva mensual | — |
+| ⑤ | Membresías y planes | Supporting | Reserva | miembro al día, horas incluidas | horas consumidas |
+| ⑥ | Facturación y cobros | Generic | Reserva | pago por adelantado del visitante | penalización, horas extra, reembolso |
+| ⑦ | Notificaciones | Transversal | Reserva | enviar el aviso | confirmación, recordatorio, rechazo |
+| ⑧ | Notificaciones | Transversal | Reserva (tras Franja liberada) | enviar el aviso | lista de espera de la franja |
+| ⑨ | Control de acceso físico | Generic | Reserva | quién actúa y su rol | reservas del día |
 
-**Por qué estas clasificaciones**
+**Por qué estas clasificaciones** (ver [01-subdominios.md](01-subdominios.md)):
 
-- **Membresías, Espacios, Eventos y Comercial** son **vecinos de Nodo**: tienen reglas propias del negocio (planes, catálogo, eventos, precios) y las modela otro grupo.
-- **Facturación** es **genérico**: cobrar a fin de mes no diferencia a Nodo de otro coworking; se integra con un software de facturación existente en lugar de construirlo.
-- **Notificaciones** e **Identidad / acceso** son **transversales**: todas las áreas mandan avisos y todas necesitan saber quién es el usuario. Además son genéricos: el canal (WhatsApp o correo) y el inicio de sesión se integran, no se construyen.
+- **Espacios y recursos, Tarifas y precios y Membresías y planes** son **supporting**: tienen reglas propias de Nodo (catálogo, precios, planes), pero no son la razón por la que eligen a Nodo.
+- **Facturación y cobros** y **Control de acceso físico** son **generic**: se integran con un software de facturación, una pasarela de pago y la solución de la cerradura electrónica.
+- **Notificaciones** es **generic y transversal**: casi todas las áreas la disparan, y el envío por correo o mensajería se integra.
 
 ---
 
@@ -185,47 +153,55 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 
 | Relación descartada | Por qué no se dibuja |
 |---|---|
-| Reserva ↔ Eventos directa | Lo único que compartimos con Eventos es el **espacio**, y eso lo resuelve Disponibilidad. Reserva no sabe nada de eventos. |
-| Disponibilidad ↔ Notificaciones | La franja liberada no le importa a nadie fuera del área por sí sola; lo que se avisa es a **quienes esperaban**, y la lista de espera es de Reserva. |
-| Disponibilidad ↔ Membresías | Si una franja está libre no depende de quién la pida. El estado del miembro solo le importa a Reserva. |
-| Disponibilidad ↔ Facturación | Una franja no se cobra; se cobra lo que hace una persona con una reserva. |
-| Reserva ↔ WhatsApp directo | Mandar mensajes no es nuestra responsabilidad. Si cada área escribiera por WhatsApp por su cuenta, se repetiría el problema de hoy (avisos a mano y olvidados). |
+| Nuestra área ↔ Agenda de eventos | El salón es un recurso aparte, se alquila por horas o jornadas y pertenece a Agenda de eventos. Nuestra área solo reserva salas de reunión. |
+| Disponibilidad ↔ Notificaciones | Lo que se avisa es a **quienes esperaban**, y la lista de espera es de Reserva. |
+| Disponibilidad ↔ Membresías y planes | Si una franja está libre no depende de quién la pida. El estado del miembro solo le importa a Reserva. |
+| Disponibilidad ↔ Facturación y cobros | Una franja no se cobra; se cobra lo que hace una persona con una reserva. |
+| Reserva ↔ WhatsApp directo | Enviar mensajes no es nuestra responsabilidad. Si cada área escribiera por WhatsApp por su cuenta, se repetiría el problema de hoy (avisos a mano y olvidados). |
 
 ---
 
 ## 6. Polisemias en las fronteras
 
-Una misma palabra con dos sentidos señala la frontera entre dos contextos. Estas son las que aparecen en el mapa:
+Una misma palabra con dos sentidos señala la frontera entre dos contextos:
 
 | Palabra | En nuestra área | En el vecino | Frontera |
 |---|---|---|---|
-| **Reserva** | Una franja de sala o escritorio flexible para una persona | Eventos: el salón para un evento. Comercial: una reserva mensual cotizada | ③, ④ |
-| **Miembro** | Quien reserva (puede ser un visitante) | Membresías: titular de un plan. Identidad: usuario con una cuenta | ⑤, ⑨ |
-| **Penalización** | Hecho: «canceló con menos de 4 h» | Facturación: cargo con monto | ⑥ |
-| **Bloqueo** | Una franja que no se ofrece | Espacios: sala fuera de servicio (¿o es lo mismo?) | ② |
-| **Horas** | Duración de la franja reservada | Membresías: horas incluidas en el plan. Facturación: horas extra facturables | ⑤, ⑥ |
-| **Evento** | (En DDD) algo que ocurrió: «Reserva confirmada» | Eventos: un acto en el salón de Nodo | ③ |
-| **Cancelación** | De una reserva | Membresías: de un plan | ⑤ |
+| **Reserva** | Una franja de una sala de reunión asignada a una persona | Agenda de eventos: alquiler del salón. Facturación y cobros: cargo por cobrar. Control de acceso físico: autorización temporal de entrada | ⑥, ⑨ |
+| **Miembro** | Persona con membresía que reserva (también puede reservar un visitante) | Membresías y planes: titular de un plan | ⑤ |
+| **Penalización** | Hecho: «canceló con menos de 4 h» | Facturación y cobros: cargo de la franja completa | ⑥ |
+| **Horas** | Duración de la franja reservada | Membresías y planes: horas incluidas en el plan. Facturación y cobros: horas extra facturables | ⑤, ⑥ |
+| **Aforo** | Límite de asistentes de una reserva | Tarifas y precios: variable que influye en el precio | ③, ④ |
+| **Precio** | Lo que conserva una reserva confirmada | Tarifas y precios: *tarifa* es la lista de precios; *precio*, lo que paga esa persona | ④ |
+| **Evento** | (En DDD) algo que ocurrió: «Reserva confirmada» | Agenda de eventos: un acto en el salón de Nodo | — |
+| **Cancelación** | De una reserva | Membresías y planes: baja de un plan al final del ciclo | ⑤ |
 
 ---
 
-## 7. Preguntas para la Sesión 4
+## 7. Hotspots de integración resueltos
 
-Son los hotspots de integración de la sección 3, ordenados por impacto. Se responderán al elegir el patrón de integración de cada relación.
+| ID | Pregunta | Respuesta | Relación |
+|---|---|---|---|
+| HI-01 | ¿Qué garantiza que la reserva y la ocupación de la franja nunca queden en desacuerdo, incluso si dos personas piden la última franja a la vez? | La agenda de la sala garantiza aislamiento transaccional: se confirma una sola solicitud y la otra se rechaza o entra en la lista de espera. | ① |
+| HI-02 | ¿Un bloqueo puede pisar una reserva ya hecha? | Sí, pero la reserva no se elimina sin solución: se reasigna, se reprograma o se reembolsa (P-09). | ① |
+| HI-03 | ¿Quién bloquea una sala? | Recepción, administración o dirección, por mantenimiento o limpieza (R-07). | ① |
+| HI-04 | ¿Qué pasa con las reservas futuras de una sala dada de baja? | Igual que con un bloqueo: se reasignan, se reprograman o se reembolsan. | ② |
+| HI-05 | ¿Los escritorios se reservan por franja? | No: el flexible se usa según el plan y el fijo se asigna. Disponibilidad solo recibe salas de reunión. | ② |
+| HI-06 / HI-07 | ¿Eventos y salas comparten espacio? | El salón es un recurso aparte de Agenda de eventos; nuestra área solo reserva salas de reunión. La línea se quitó. | — |
+| HI-08 | ¿La cotización aparta la franja? | No. Vence a los 4 días si no se confirma. | ④ |
+| HI-09 | ¿La reserva mensual cumple las mismas reglas? | Sí: margen de 15 min, aforo y anticipación en cada fecha. | ④ |
+| HI-10 | ¿Qué pasa si una fecha de la serie ya está ocupada? | Se confirman las libres y recepción coordina otra sala u horario para la ocupada. | ④ |
+| HI-11 | ¿Qué estado de membresía vale y cuándo? | El estado al momento de confirmar (R-02). | ⑤ |
+| HI-12 | ¿Quién lleva la cuenta de horas usadas? | Membresías y planes; Reserva le informa cada reserva confirmada o cancelada. | ⑤ |
+| HI-13 | ¿Qué pasa si Membresías y planes no responde? | La solicitud pasa a recepción, que verifica el estado y la registra como reserva asistida. | ⑤ |
+| HI-14 | ¿Quién calcula el monto de la franja completa? | Facturación y cobros, con el precio conservado que envía Reserva. | ④, ⑥ |
+| HI-15 | Si se reserva a nombre de un invitado, ¿quién responde? | El miembro. | ⑥ |
+| HI-16 | ¿Se avisa a toda la lista de espera o por orden? | A todos (P-06). | ⑧ |
+| HI-17 | ¿Quién programa el recordatorio del día antes? | Notificaciones, con la fecha que envía Reserva al confirmar. | ⑦ |
+| HI-18 | ¿Cómo se anula el recordatorio si la reserva se cancela? | Notificaciones escucha *Reserva cancelada* y lo anula. | ⑦ |
+| HI-19 | ¿Cómo confirma el visitante? | Pagando por adelantado (R-05, P-10). | ⑥ |
+| HI-20 | ¿La reserva da acceso al visitante? | Entra con apertura manual o un código temporal de recepción. | ⑨ |
 
-| Prioridad | ID | Pregunta | Relación | Por qué importa |
-|---|---|---|---|---|
-| Alta | HI-01 | ¿Cómo se garantiza que la reserva y la ocupación de la franja nunca queden en desacuerdo, incluso si dos personas piden la última franja a la vez? | ① | Es la regla sagrada. Si falla, el core falla. |
-| Alta | HI-11 | ¿Qué estado de membresía vale y en qué momento? | ⑤ | Define si R-02 es una invariante o una política. |
-| Alta | HI-12 | ¿Quién lleva la cuenta de horas usadas? | ⑤ | Si los dos la llevan, se contradicen. |
-| Alta | HI-14 | ¿Quién calcula el monto de la penalización? | ⑥ | Define cuánto sabe Reserva del dinero. |
-| Media | HI-02 | ¿Un bloqueo puede pisar una reserva ya hecha? | ① | Choca con la regla sagrada. |
-| Media | HI-03 | ¿Quién bloquea por mantenimiento? | ② | Define si Espacios escribe en Disponibilidad. |
-| Media | HI-08, HI-10 | ¿Cómo entra una reserva mensual? | ④ | Una serie de reservas podría romper el margen de 15 min. |
-| Media | HI-13 | ¿Qué hacer si Membresías no responde? | ⑤ | Dependemos de un vecino para confirmar. |
-| Media | HI-16, HI-17, HI-18 | ¿Quién decide a quién y cuándo se avisa? | ⑦, ⑧ | Es la fricción que el sistema quiere eliminar. |
-| Baja | HI-06, HI-07 | ¿Eventos y salas comparten espacio? | ③ | Si no, la línea casi desaparece. |
-| Baja | HI-15, HI-19, HI-20 | Visitantes y cancelaciones hechas por recepción | ⑥, ⑨ | Casos límite; afectan pocos flujos. |
+**Dónde protegerse:** en ⑤ (Membresías y planes), ②–③ (Espacios y recursos) y ④ (Tarifas y precios). Sus modelos cambian por motivos propios (planes nuevos, salas nuevas, tarifas por temporada) y no queremos que eso nos obligue a cambiar nuestras reglas.
 
-**Dónde habrá que protegerse:** en ⑤ (Membresías) y ② (Espacios). Sus modelos cambian por motivos propios (planes nuevos, salas nuevas) y no queremos que eso nos obligue a cambiar nuestras reglas.
-**Dónde habrá que negociar:** en ⑥ (quién calcula montos), ④ (cómo entra una reserva mensual) y ⑦/⑧ (quién decide los avisos).
+**Qué se acordó con los vecinos:** Facturación y cobros calcula los montos (⑥); la reserva mensual sigue las mismas reglas y recepción coordina las fechas ocupadas (④); Membresías y planes lleva las horas usadas (⑤); Notificaciones programa y anula los recordatorios (⑦/⑧).

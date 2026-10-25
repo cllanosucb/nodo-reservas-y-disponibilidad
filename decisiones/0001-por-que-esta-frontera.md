@@ -1,40 +1,44 @@
 # 0001 · Por qué esta frontera: Disponibilidad y Reserva
 
-- **Estado:** Aceptada (provisional hasta la Sesión 4)
-- **Área:** Reservas y disponibilidad (Core)
+- **Estado:** Aceptada
+- **Área:** Reservas y disponibilidad (core)
 
 ## Contexto
-Al principio asumimos que el área era un solo contexto. El glosario y el EventStorming mostraron dos lenguajes y dos ritmos de cambio dentro de la misma área.
+Al principio asumimos que el área era un solo contexto. El glosario ([docs/02-glosario.md](../docs/02-glosario.md)) y el EventStorming ([docs/03-eventstorming.md](../docs/03-eventstorming.md)) mostraron dos lenguajes y dos ritmos de cambio dentro de la misma área.
 
 ## Decisión
-Dividimos el área en dos bounded contexts:
+Dividimos el área en dos bounded contexts, los dos core:
 
 | Contexto | Responsabilidad | Lenguaje propio |
 |---|---|---|
-| **Disponibilidad** | Qué franjas de qué recurso están libres: franjas, margen de 15 min y bloqueos. | Sala, Recurso reservable, Escritorio flexible, Franja, Margen, Bloqueo, Disponibilidad |
-| **Reserva** | El ciclo de vida de lo que pide un miembro: solicitud, confirmación, cancelación, penalización y lista de espera. | Solicitud, Reserva, Confirmada, Anticipación, Reserva asistida, Miembro al día, Visitante, Cancelación, Penalización, Horas extra, Lista de espera |
+| **Disponibilidad** | Qué franjas de qué sala de reunión están libres: franjas, margen de 15 min y bloqueos por mantenimiento o limpieza. | Sala de reunión, Recurso reservable, Franja, Margen, Bloqueo, Disponibilidad |
+| **Reserva** | El ciclo de vida de lo que pide una persona (miembro o visitante): solicitud, confirmación o rechazo, reserva asistida, cancelación, penalización, horas extra y lista de espera. | Solicitud de reserva, Reserva, Confirmada, Anticipación, Reserva asistida, Miembro al día, Visitante, Invitado, Aforo, Cancelación, Cancelación tardía, Penalización, Horas extra, Lista de espera |
 
 ## Señales que justifican la frontera
-1. **Polisemia: "bloquear" vs. "cancelar".** Un bloqueo es de Nodo y actúa sobre una franja, sin miembro ni cobro. Una cancelación es de un miembro y actúa sobre una reserva, con posible penalización. Ambas liberan o quitan la franja, pero significan cosas distintas.
-2. **Reglas que cambian por su cuenta.** El margen de 15 min y los bloqueos dependen de operaciones (limpieza, mantenimiento). La anticipación, la penalización y el criterio de "al día" son política comercial. Pueden cambiar sin tocar el otro lado.
-3. **Actores distintos.** En Disponibilidad decide recepción u operaciones (quien bloquea). En Reserva actúan el miembro, el visitante y recepción en la reserva asistida.
-4. **Preguntas distintas.** Disponibilidad responde "¿qué está libre?", que es el modelo de lectura *Salas disponibles*. Reserva responde "¿esta persona puede quedarse con esta franja y bajo qué condiciones?".
+1. **Polisemia: "bloquear" vs. "cancelar".** Un bloqueo es de Nodo y actúa sobre una franja, sin titular ni cobro. Una cancelación es del titular o de recepción y actúa sobre una reserva, con posible cobro de la franja completa. Ambas quitan o liberan la franja, pero significan cosas distintas.
+2. **Reglas que cambian por su cuenta.** El margen de 15 min y los bloqueos responden a la operación (limpieza, ventilación y mantenimiento). La anticipación, la penalización, el criterio de "al día" y el pago por adelantado del visitante son política comercial. Pueden cambiar sin tocar el otro lado.
+3. **Actores distintos.** En Disponibilidad bloquean recepción, administración o dirección. En Reserva actúan el miembro, el visitante y recepción (reserva asistida, cancelación y resolución de una reserva afectada por un bloqueo).
+4. **Preguntas distintas.** Disponibilidad responde «¿qué está libre?», que es el modelo de lectura *Salas disponibles*. Reserva responde «¿esta persona puede quedarse con esta franja y bajo qué condiciones?».
 
 ## Alternativas descartadas
 - **Un solo contexto.** Mezcla reglas operativas y comerciales en el mismo modelo, y "liberar franja" queda ambiguo (¿bloqueo o cancelación?).
-- **Lista de espera como contexto propio.** Se descartó porque no tiene lenguaje ni reglas propias. Solo reacciona a *Franja liberada*, así que vive dentro de Reserva.
-- **Eventos dentro de Reserva.** Se descartó porque "confirmar" significa otra cosa (depósito + aprobación de dirección). Eventos pertenece a otro subdominio (supporting).
-- **Penalización y horas extra en Tarifas.** Reserva decide *cuándo* aplican; Tarifas solo dice *cuánto*. El monto queda como hotspot de integración.
+- **Lista de espera como contexto propio.** No tiene lenguaje ni reglas propias: solo reacciona a *Franja liberada* avisando a todos los que esperan. Vive dentro de Reserva.
+- **Agenda de eventos dentro de Reserva.** "Confirmar" significa otra cosa (depósito y aprobación de la dirección u operaciones), y el salón es un recurso aparte. Agenda de eventos es otro subdominio (supporting).
+- **Penalización y horas extra en Tarifas y precios.** Reserva decide *cuándo* aplican; Tarifas y precios entrega el precio vigente de la franja. La penalización es la franja completa.
 
 ## Consecuencias
 - Cada contexto tiene su carpeta en `src/` y su sección en el glosario.
-- Entre ambos cruza información en los dos sentidos:
-  - Reserva le **pide** a Disponibilidad si una franja está libre.
-  - Disponibilidad **escucha** *Reserva confirmada* y *Reserva cancelada* para ocupar o liberar la franja.
-  - Reserva **escucha** *Franja liberada* para avisar a la lista de espera.
-- Coherencia con el subdominio: los dos contextos pertenecen al core, y ninguno es genérico ni comprable.
+- Entre ambos cruza información en los dos sentidos (línea ① de [docs/05-context-map.md](../docs/05-context-map.md)):
+  - Reserva le **pide** a Disponibilidad si una franja está libre y, si lo está, que la ocupe.
+  - Disponibilidad **escucha** *Reserva confirmada* para ocupar la franja y *Reserva cancelada* para liberarla (P-07).
+  - Reserva **escucha** *Franja liberada* para avisar a la lista de espera (P-06) y *Sala bloqueada* para resolver una reserva afectada (P-09).
+- Coherencia con el subdominio: los dos contextos pertenecen al core, y ninguno es genérico ni comprable ([0002-clasificacion-del-area.md](0002-clasificacion-del-area.md)).
 
-## Hotspots (para la Sesión 4)
-1. **¿Quién garantiza el invariante "una reserva por franja"?** Si dos solicitudes piden la misma franja a la vez, la consistencia cruza la frontera. Opciones: Disponibilidad ocupa la franja de forma atómica, o se reconsidera la frontera.
-2. ¿Escritorio flexible por franja o por día? Si es por día, ¿Disponibilidad lo modela igual que una sala?
-3. ¿Penalización y horas extra se calculan en Reserva o se delegan a Tarifas?
+## Hotspots resueltos
+
+| ID | Pregunta | Respuesta |
+|---|---|---|
+| HI-01 | ¿Qué garantiza «una reserva por franja» cuando dos solicitudes piden la misma franja a la vez? | La agenda de la sala garantiza aislamiento transaccional: se confirma una sola solicitud y la otra se rechaza o entra en la lista de espera. |
+| HI-14 | ¿Quién calcula el monto de la franja completa? | Facturación y cobros, con el precio conservado que envía Reserva. |
+| — | ¿El escritorio flexible se reserva por franja o por día? | No se reserva: se usa según el plan de membresía. Disponibilidad solo modela salas de reunión. |
+| — | ¿La penalización es un porcentaje o la franja completa? | La franja completa. |
