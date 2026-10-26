@@ -29,8 +29,8 @@ Dividimos el área en dos bounded contexts, los dos core:
 ## Consecuencias
 - Cada contexto tiene su carpeta en `src/` y su sección en el glosario.
 - Entre ambos cruza información en los dos sentidos (línea ① de [docs/05-context-map.md](../docs/05-context-map.md)):
-  - Reserva le **pide** a Disponibilidad si una franja está libre y, si lo está, que la ocupe.
-  - Disponibilidad **escucha** *Reserva confirmada* para ocupar la franja y *Reserva cancelada* para liberarla (P-07).
+  - Reserva le **pide** a Disponibilidad que ocupe la franja **antes de confirmar**, con una llamada en proceso: la reserva se confirma solo si la franja quedó ocupada (INV-R1; ver [0003-patrones-de-integracion.md](0003-patrones-de-integracion.md)).
+  - Disponibilidad **escucha** *Reserva cancelada* y *Solicitud expirada* para liberar la franja (P-07, P-11).
   - Reserva **escucha** *Franja liberada* para avisar a la lista de espera (P-06) y *Sala bloqueada* para resolver una reserva afectada (P-09).
 - Coherencia con el subdominio: los dos contextos pertenecen al core, y ninguno es genérico ni comprable ([0002-clasificacion-del-area.md](0002-clasificacion-del-area.md)).
 

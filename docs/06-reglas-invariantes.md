@@ -1,7 +1,7 @@
 # 06 · Reglas e invariantes candidatas: Reservas y disponibilidad
 
 > **Proyecto:** Nodo (coworking y eventos) · **Área:** Reservas y disponibilidad (core)
-> **Estado:** candidatas, escritas en el lenguaje del dominio y sin programar. Se protegerán en código en la Sesión 5 (aggregates).
+> **Estado:** escritas en el lenguaje del dominio y sin programar. El aggregate que protege cada una está en [08-modelo.md](08-modelo.md).
 
 ---
 
@@ -25,9 +25,9 @@ Las reglas R-xx, las políticas P-xx y los hotspots H-xx son los de [03-eventsto
 
 ## 1. Propósito y criterio
 
-Este documento junta **todas las reglas de negocio del área** que salieron del EventStorming, de las domain stories ([04-domain-stories.md](04-domain-stories.md)) y del context map ([05-context-map.md](05-context-map.md)). Las separa en dos tipos, porque en la Sesión 5 cada tipo se resuelve de forma distinta:
+Este documento junta **todas las reglas de negocio del área** que salieron del EventStorming, de las domain stories ([04-domain-stories.md](04-domain-stories.md)) y del context map ([05-context-map.md](05-context-map.md)). Las separa en dos tipos, porque en el modelo cada tipo se resuelve de forma distinta:
 
-| Tipo | Definición | Prueba para reconocerla | En la Sesión 5… |
+| Tipo | Definición | Prueba para reconocerla | En el modelo… |
 |---|---|---|---|
 | **Invariante** | Algo que el sistema debe garantizar **siempre**, en todo momento, sin excepción. | «¿Puede existir, aunque sea un instante, un estado donde esto no se cumpla?» Si la respuesta es **nunca**, es una invariante. | La protege un **aggregate**: no se puede guardar un estado que la rompa. |
 | **Política** | Una **reacción** automática a un evento: «cuando ocurre X → hacer Y». | «¿Puede pasar un rato entre la causa y el efecto sin que nada esté mal?» Si **sí**, es una política. | Escucha un evento y dispara un comando, a veces en otro contexto. |
@@ -255,11 +255,13 @@ Cada regla de este listado tiene respuesta del experto y quedó incorporada a un
 
 ---
 
-## 7. Puente hacia la Sesión 5
+## 7. Puente hacia el modelo
 
-| Aggregate candidato | Contexto | Invariantes que protege | Por qué juntas |
+El detalle de cada aggregate (entidades, value objects, comandos y eventos) está en [08-modelo.md](08-modelo.md).
+
+| Aggregate | Contexto | Invariantes que protege | Por qué juntas |
 |---|---|---|---|
-| **Agenda del recurso** (una sala, con sus ocupaciones y bloqueos) | Disponibilidad | INV-D1, D2, D3, D4, D5 | Para decidir si una franja nueva cabe hay que mirar **todas** las demás franjas de la misma sala a la vez. |
+| **Agenda del recurso** (una sala en un día, con sus ocupaciones y bloqueos) | Disponibilidad | INV-D1, D2, D3, D4, D5 | Para decidir si una franja nueva cabe hay que mirar **todas** las demás franjas de la misma sala a la vez. |
 | **Reserva** | Reserva | INV-R2, R3, R4, R5, R6, R7, R8 | Dependen de datos de la propia reserva: estado, hora de inicio, titular, asistentes, quién la registró y plazo de pago. |
 | **Lista de espera** (por sala y franja) | Reserva | INV-R9 | Cambia por motivos distintos a la reserva y no debe bloquearla. |
 | *(entre contextos)* | Disponibilidad ↔ Reserva | INV-R1 | Se cumple con la secuencia «ocupar la franja → confirmar la reserva». |
