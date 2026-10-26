@@ -14,7 +14,7 @@
 | Forma en el mapa | Tipo | Qué significa para nosotros |
 |---|---|---|
 | Recuadro naranja claro con borde naranja oscuro | **Área core** | Reservas y disponibilidad, nuestra área. |
-| Cajas blancas con borde naranja, dentro del área | **Propio** | Los dos bounded contexts del área: Disponibilidad y Reserva. Los modelamos nosotros (Sesiones 5 y 6). |
+| Cajas blancas con borde naranja, dentro del área | **Propio** | Los dos bounded contexts del área: Disponibilidad y Reserva. Los modelamos nosotros ([08-modelo.md](08-modelo.md)). |
 | Caja blanca con borde gris continuo | **Vecino (supporting)** | Otra área del negocio de Nodo, con su propio modelo: Espacios y recursos, Membresías y planes, Tarifas y precios. Hay que acordar qué cruza la frontera. |
 | Caja gris con borde punteado | **Externo (generic)** | No diferencia a Nodo; se integra: Facturación y cobros, Control de acceso físico. |
 | Franja gris con borde punteado, al pie del mapa | **Transversal (generic)** | Lo usan todas las áreas, no solo la nuestra: Notificaciones. |
@@ -58,7 +58,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 | **Reserva le pide a Disponibilidad** | «¿Está libre esta franja de esta sala, respetando el margen de 15 min y los bloqueos?» y, si lo está, **ocuparla** para la reserva. |
 | **Disponibilidad le entrega a Reserva** | La respuesta (libre / ocupada), **Franja liberada** para que Reserva avise a la lista de espera, y **Sala bloqueada** cuando la franja bloqueada tenía una reserva confirmada. |
 | **Datos que cruzan** | sala, fecha, hora de inicio, hora de fin, identificador de la reserva que la ocupa. |
-| **Eventos que cruzan** | Reserva confirmada → ocupa la franja · Reserva cancelada → {P-07} → **Franja liberada** · Solicitud expirada (visitante sin pago, P-11) → **Franja liberada** · **Sala bloqueada** → {P-09} → Resolver reserva afectada → **Reserva reasignada** / **Reserva reprogramada** / **Reembolso solicitado**. |
+| **Eventos que cruzan** | Reserva pide ocupar la franja **antes de confirmar** (INV-R1) · Reserva cancelada → {P-07} → **Franja liberada** · Solicitud expirada (visitante sin pago, P-11) → **Franja liberada** · **Sala bloqueada** → {P-09} → Resolver reserva afectada → **Reserva reasignada** / **Reserva reprogramada** / **Reembolso solicitado**. |
 | **Hotspots resueltos** | **HI-01:** si dos personas piden la última franja a la vez, la agenda de la sala garantiza aislamiento transaccional: se confirma una sola solicitud y la otra se rechaza o entra en la lista de espera (H-03). |
 
 ### ② Espacios y recursos ↔ Disponibilidad
@@ -114,7 +114,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 | **Le pedimos** | Que envíe el aviso por WhatsApp o correo. Nosotros no redactamos ni enviamos mensajes. |
 | **Le entregamos** | ⑦ **Reserva confirmada** (→ Confirmación enviada), la fecha para el **recordatorio del día antes** (P-03) y **Solicitud rechazada** (P-08). ⑧ Cuando Disponibilidad avisa **Franja liberada**, Reserva entrega la lista de espera de esa franja: se avisa a **todos** (P-06). Disponibilidad no habla con Notificaciones: no sabe quién espera. |
 | **Datos que cruzan** | destinatario, tipo de aviso, sala, fecha y hora. |
-| **Hotspots resueltos** | **HI-17:** el recordatorio lo programa Notificaciones con la fecha que envía Reserva al confirmar. · **HI-18:** si la reserva se cancela, Notificaciones escucha *Reserva cancelada* y anula el recordatorio pendiente. |
+| **Hotspots resueltos** | **HI-17:** el recordatorio lo programa Notificaciones con la fecha que envía Reserva al confirmar. · **HI-18:** si la reserva se cancela, Reserva pide anular el recordatorio y Notificaciones anula el pendiente. |
 
 ### ⑨ Control de acceso físico ↔ Reserva
 
@@ -198,7 +198,7 @@ Una misma palabra con dos sentidos señala la frontera entre dos contextos:
 | HI-15 | Si se reserva a nombre de un invitado, ¿quién responde? | El miembro. | ⑥ |
 | HI-16 | ¿Se avisa a toda la lista de espera o por orden? | A todos (P-06). | ⑧ |
 | HI-17 | ¿Quién programa el recordatorio del día antes? | Notificaciones, con la fecha que envía Reserva al confirmar. | ⑦ |
-| HI-18 | ¿Cómo se anula el recordatorio si la reserva se cancela? | Notificaciones escucha *Reserva cancelada* y lo anula. | ⑦ |
+| HI-18 | ¿Cómo se anula el recordatorio si la reserva se cancela? | Reserva pide anularlo y Notificaciones lo anula. | ⑦ |
 | HI-19 | ¿Cómo confirma el visitante? | Pagando por adelantado (R-05, P-10). | ⑥ |
 | HI-20 | ¿La reserva da acceso al visitante? | Entra con apertura manual o un código temporal de recepción. | ⑨ |
 

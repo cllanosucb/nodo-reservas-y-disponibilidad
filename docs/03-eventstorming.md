@@ -207,9 +207,9 @@ Recepción — Registrar exceso de tiempo → ⟨R-06⟩ → **Horas extra regis
 
 ---
 
-## 8. Puente hacia la Sesión 5: reglas como invariantes candidatas
+## 8. Puente hacia el modelo: reglas como invariantes candidatas
 
-Cada regla del muro se convierte en una invariante candidata que protegerá un aggregate. Su redacción formal está en [06-reglas-invariantes.md](06-reglas-invariantes.md).
+Cada regla del muro se convierte en una invariante candidata que protegerá un aggregate. Su redacción formal está en [06-reglas-invariantes.md](06-reglas-invariantes.md) y el aggregate que la protege, en [08-modelo.md](08-modelo.md).
 
 | Regla | Invariante candidata | Contexto |
 |---|---|---|
@@ -219,6 +219,6 @@ Cada regla del muro se convierte en una invariante candidata que protegerá un a
 | R-03 | Ninguna reserva se registra con menos de 3 h de anticipación | Reserva |
 | R-04 | Los asistentes de una reserva nunca superan el aforo de la sala | Reserva |
 | R-05 | Ninguna reserva de visitante se confirma sin pago por adelantado; la franja provisional se libera si vence el plazo | Reserva |
-| R-06 | El exceso de tiempo nunca invade una reserva confirmada | Reserva |
+| R-06 | El exceso de tiempo nunca invade una reserva confirmada | Disponibilidad |
 
 Las políticas P-01 a P-11 no son invariantes: son reacciones a eventos, y entre la causa y el efecto puede pasar un tiempo sin que el sistema quede en un estado inválido.
