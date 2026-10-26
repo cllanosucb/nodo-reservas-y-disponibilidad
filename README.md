@@ -2,7 +2,7 @@
 
 > **Curso:** Fundamentos de Domain-Driven Design · **Caso:** Nodo (coworking y eventos)
 > **Área del grupo:** Reservas y disponibilidad (core)
-> **Estado:** diseño estratégico — táctico pendiente, Sesiones 5–6
+> **Estado:** diseño estratégico, integración, modelo y componentes terminados — prototipo pendiente
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Integrante | Rol |
 |---|---|
-| Integrante 1 | Subdominios y glosario |
-| Integrante 2 | EventStorming y domain stories |
-| Integrante 3 | Context map, reglas e invariantes y decisiones |
+| Carlos Llanos Rodriguez | Subdominios, glosario y modelo |
+| David Almaraz | EventStorming, domain stories y componentes |
+| Jhoann Guerrero | Context map, integración, reglas e invariantes y decisiones |
 
 ---
 
@@ -77,24 +77,26 @@ Detalle: [docs/02-glosario.md](docs/02-glosario.md)
 
 ![Context map de Reservas y disponibilidad](docs/img/05-context-map.png)
 
-| # | Relación | Qué cruza |
-|---|---|---|
-| ① | Disponibilidad ↔ Reserva | Ocupar o liberar la franja · Sala bloqueada |
-| ② | Espacios y recursos ↔ Disponibilidad | Salas de reunión reservables |
-| ③ | Espacios y recursos ↔ Reserva | Aforo de cada sala |
-| ④ | Tarifas y precios ↔ Reserva | Precio vigente de la franja · reserva mensual cotizada |
-| ⑤ | Membresías y planes ↔ Reserva | Miembro al día · horas incluidas · horas consumidas |
-| ⑥ | Reserva ↔ Facturación y cobros | Pago por adelantado · penalización · horas extra · reembolso |
-| ⑦ ⑧ | Reserva ↔ Notificaciones | Confirmación, recordatorio y rechazo · aviso a la lista de espera |
-| ⑨ | Control de acceso físico ↔ Reserva | Quién actúa y su rol · reservas del día |
+| # | Relación | Qué cruza | Patrón | Mecanismo |
+|---|---|---|---|---|
+| ① | Disponibilidad ↔ Reserva | Ocupar o liberar la franja · Sala bloqueada | Shared kernel (Franja e identificador de sala) | Llamada en proceso · eventos de dominio en proceso |
+| ② | Espacios y recursos → Disponibilidad | Salas de reunión reservables | Customer/Supplier + ACL | Mensajería async |
+| ③ | Espacios y recursos → Reserva | Aforo de cada sala | Customer/Supplier + ACL | API REST |
+| ④ | Tarifas y precios → Reserva | Precio vigente de la franja · reserva mensual cotizada | Customer/Supplier + ACL | API REST |
+| ⑤ | Membresías y planes → Reserva | Miembro al día · horas incluidas · horas consumidas | Customer/Supplier + ACL | API REST |
+| ⑥ | Facturación y cobros → Reserva | Pago por adelantado · penalización · horas extra · reembolso | ACL | API externa |
+| ⑦ ⑧ | Notificaciones → Reserva | Confirmación, recordatorio y rechazo · aviso a la lista de espera | OHS + Conformist | Cola de mensajes |
+| ⑨ | Control de acceso físico → Reserva | Quién actúa y su rol · reservas del día | OHS + ACL | Token con rol · API externa |
 
-Detalle: [docs/05-context-map.md](docs/05-context-map.md)
+La flecha va del contexto de aguas arriba (define el contrato) al de aguas abajo. Con **Agenda de eventos** no hay integración (Separate Ways): el salón es un recurso aparte.
+
+Detalle: [docs/05-context-map.md](docs/05-context-map.md) · Integración (cuatro capas y detalle de cada ACL): [docs/07-integracion.md](docs/07-integracion.md) · Decisión: [decisiones/0003-patrones-de-integracion.md](decisiones/0003-patrones-de-integracion.md)
 
 ---
 
-## 5. Reglas e invariantes candidatas
+## 5. Reglas e invariantes
 
-**Disponibilidad** (aggregate candidato: *Agenda del recurso*)
+**Disponibilidad** (aggregate: *Agenda del recurso*, una por sala y día)
 
 - **INV-D1** · Nunca dos ocupaciones se solapan en la misma sala.
 - **INV-D2** · Siempre quedan 15 minutos de margen, también frente a un bloqueo.
@@ -102,7 +104,7 @@ Detalle: [docs/05-context-map.md](docs/05-context-map.md)
 - **INV-D4** · Solo se libera una franja ocupada, y una sola vez.
 - **INV-D5** · El exceso de tiempo nunca invade una reserva confirmada.
 
-**Reserva** (aggregate candidato: *Reserva*; *Lista de espera* aparte)
+**Reserva** (aggregates: *Reserva* y *Lista de espera*)
 
 - **INV-R1** · Toda reserva confirmada tiene su franja ocupada en Disponibilidad (cruza contextos).
 - **INV-R2** · Una reserva solo pasa por estados válidos.
@@ -120,9 +122,40 @@ Detalle: [docs/06-reglas-invariantes.md](docs/06-reglas-invariantes.md) · Orige
 
 ---
 
-## 6. Estado del proyecto
+## 6. Modelo: aggregates y domain events
 
-**Diseño estratégico — táctico pendiente, Sesiones 5–6.**
+Cada invariante queda protegida por un aggregate. **Franja** (inicio, fin) es el único value object compartido por los dos contextos.
+
+| Aggregate | Contexto | Raíz e identidad | Invariantes | Domain events principales |
+|---|---|---|---|---|
+| **Agenda del recurso** | Disponibilidad | `AgendaDelRecurso`: una sala en un día (salaId + fecha), con sus ocupaciones y bloqueos | INV-D1 a INV-D5 | Sala bloqueada · Franja liberada |
+| **Reserva** | Reserva | `Reserva` (reservaId), con su estado, franja, titular, asistentes y precio conservado | INV-R2 a INV-R8 | Reserva solicitada · Reserva confirmada · Solicitud rechazada · Solicitud expirada · Reserva cancelada · Penalización aplicada |
+| **Lista de espera** | Reserva | `ListaDeEspera`: una por sala y franja | INV-R9 | Añadido a la lista de espera · Lista de espera notificada |
+
+**El último cupo:** la agenda tiene versión. Si dos solicitudes compiten por la misma sala el mismo día, una gana; la otra reintenta, encuentra la franja ocupada y se rechaza o entra en la lista de espera.
+
+Detalle: [docs/08-modelo.md](docs/08-modelo.md)
+
+---
+
+## 7. Componentes
+
+| Pieza | Decisión |
+|---|---|
+| **Domain services** | Ninguno: cada regla tiene dueño (`AgendaDelRecurso.ocupar`, `Reserva.confirmar`, `PolíticaDeCancelación`). |
+| **Repositories** | Uno por raíz: Reserva, Agenda del recurso y Lista de espera. En el prototipo, en memoria. |
+| **Factories** | Sin clases factory: `Reserva.solicitar(...)`, `AgendaDelRecurso.abrir(...)` y `ListaDeEspera.abrir(...)`. |
+| **Application services** | Coordinan, no deciden. Caso principal: **SolicitarReserva**. |
+
+**Reservar una sala, en cinco pasos:** (1) la reserva se solicita y se valida la anticipación; (2) se consultan el aforo y el estado del miembro por sus ACL; (3) la agenda **ocupa la franja**; (4) si quedó ocupada, la reserva se confirma con el precio vigente (o queda provisional si es un visitante); (5) si no, la solicitud se rechaza y la persona entra en la lista de espera. Cada aggregate se guarda en su propia transacción.
+
+Detalle (pseudocódigo y flujos): [docs/09-componentes.md](docs/09-componentes.md)
+
+---
+
+## 8. Estado del proyecto
+
+**Diseño estratégico, integración, modelo y componentes terminados — prototipo pendiente.**
 
 | Artefacto | Documento | Estado |
 |---|---|---|
@@ -131,10 +164,12 @@ Detalle: [docs/06-reglas-invariantes.md](docs/06-reglas-invariantes.md) · Orige
 | EventStorming | [docs/03-eventstorming.md](docs/03-eventstorming.md) | Terminado |
 | Domain stories (as-is / to-be) | [docs/04-domain-stories.md](docs/04-domain-stories.md) | Terminado |
 | Context map | [docs/05-context-map.md](docs/05-context-map.md) | Terminado |
-| Reglas e invariantes candidatas | [docs/06-reglas-invariantes.md](docs/06-reglas-invariantes.md) | Terminado |
-| Decisiones (ADR) | [decisiones/](decisiones/) | Terminado |
-| Esqueleto por bounded context | `src/` | Pendiente |
-| Aggregates, servicios y prototipo | — | Pendiente |
+| Reglas e invariantes | [docs/06-reglas-invariantes.md](docs/06-reglas-invariantes.md) | Terminado |
+| Integración (patrones, dirección, qué cruza y mecanismo) | [docs/07-integracion.md](docs/07-integracion.md) | Terminado |
+| Modelo (entidades, value objects, aggregates y domain events) | [docs/08-modelo.md](docs/08-modelo.md) | Terminado |
+| Componentes (domain services, repositorios, factories y application services) | [docs/09-componentes.md](docs/09-componentes.md) | Terminado |
+| Decisiones (ADR 0001 a 0003) | [decisiones/](decisiones/) | Terminado |
+| Prototipo por bounded context | `src/` | Pendiente |
 
 Los artefactos visuales están en el tablero de Miro del proyecto; cada documento muestra la imagen exportada del frame correspondiente.
 
@@ -152,9 +187,13 @@ nodo-reservas-y-disponibilidad/
 │   ├── 04-domain-stories.md
 │   ├── 05-context-map.md
 │   ├── 06-reglas-invariantes.md
+│   ├── 07-integracion.md
+│   ├── 08-modelo.md
+│   ├── 09-componentes.md
 │   └── img/
 ├── decisiones/
 │   ├── 0001-por-que-esta-frontera.md
-│   └── 0002-clasificacion-del-area.md
+│   ├── 0002-clasificacion-del-area.md
+│   └── 0003-patrones-de-integracion.md
 └── src/
 ```
