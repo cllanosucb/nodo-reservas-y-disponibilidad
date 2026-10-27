@@ -97,7 +97,7 @@ SolicitarReserva.ejecutar(cmd)
   aforo   = aforoDeSala.consultar(cmd.salaId)             // ACL ③
   estado  = estadoDelMiembro.consultar(cmd.titular)       // ACL ⑤
   si estado = sin respuesta: derivar a recepción (reserva asistida)   // HI-13
-  si no cumple aforo o al día: reserva.rechazar(motivo)   // INV-R3, INV-R5
+  si no cumple aforo o al día: reserva.rechazar(motivo)   // INV-R3, INV-R5 · P-08
 
   agenda = agendas.de(cmd.salaId, franja.dia)
            ?? AgendaDelRecurso.abrir(cmd.salaId, franja.dia)
@@ -125,7 +125,10 @@ SolicitarReserva.ejecutar(cmd)
     reserva.dejarProvisional(plazoDePago)                 // INV-R6
   si no:
     precio = precioDeFranja.vigente(cmd.salaId, franja, cmd.equipoPedido)   // ACL ④
-    reserva.confirmar(estado.alDia, unidades, precio, ahora)   // Reserva confirmada
+    reserva.confirmar(estado.alDia, unidades, precio, ahora)   // Reserva confirmada (P-01)
+    si franja.horas > estado.horasDisponibles:              // P-04
+      reserva.registrarHorasExtra(franja.horas - estado.horasDisponibles,
+                                  "supera las horas del plan")  // Horas extra registradas
 
   si falla reservas.guardar(reserva):
     liberar la sala y las unidades ocupadas              // compensación: INV-R1
@@ -168,6 +171,25 @@ AvisarListaDeEspera.al(Franja liberada)                     // Reserva, P-06
 | Registrar exceso de tiempo | `agenda.verificarExceso` → `reserva.registrarHorasExtra` → *Horas extra registradas*, o desalojar | R-06, INV-D5 |
 | Registrar salida anticipada | Recepción: `agenda.liberarResto(reservaId, ahora)` en la sala y en cada equipo asignado → *Franja liberada* → aviso a la lista de espera | P-12, INV-D4, H-13 |
 | Ocupar equipo para un evento | Lo pide Agenda de eventos por la API de ⑩: `agenda.ocupar(franja, eventoId)` en una unidad libre del tipo; y `liberar` si el evento se cae | R-08, ⑩ |
+
+### Dónde se cumple cada política
+
+Cada política del EventStorming tiene un componente que la ejecuta: un application service, un manejador de eventos en proceso o el vecino que la recibe por su contrato.
+
+| Política | Evento que la dispara | Quién reacciona | Componente |
+|---|---|---|---|
+| P-01 confirmar | Reserva solicitada | Reserva | `SolicitarReserva` → `reserva.confirmar` |
+| P-02 lista de espera | Franja ocupada al solicitar | Reserva | `SolicitarReserva` → `ListaDeEspera.añadir` |
+| P-03 recordatorio | Reserva confirmada | Notificaciones (vecino) | Reserva envía la fecha del recordatorio por la cola ⑦; Notificaciones lo programa (HI-17) |
+| P-04 horas sobre el plan | Reserva confirmada | Reserva | `SolicitarReserva` → `reserva.registrarHorasExtra` → Facturación y cobros (ACL ⑥) |
+| P-05 cobrar la penalización | Penalización aplicada | Facturación y cobros (vecino) | `Facturacion::registrar` (ACL ⑥); el monto lo calcula el vecino (HI-14) |
+| P-06 avisar a la lista | Franja liberada | Reserva | `AvisarListaDeEspera` → `lista.notificarATodos` → Notificaciones (cola ⑧) |
+| P-07 liberar al cancelar | Reserva cancelada | Disponibilidad | `LiberarFranja` → `agenda.liberar` |
+| P-08 rechazar y avisar | Solicitud que no cumple o pierde la franja | Reserva | `SolicitarReserva` → `reserva.rechazar` → Notificaciones (cola ⑦) |
+| P-09 resolver reserva afectada | Sala bloqueada | Recepción u operaciones | `Resolver reserva afectada` (reasignar, reprogramar o reembolsar) |
+| P-10 confirmar al visitante | Pago por adelantado registrado | Reserva | `Confirmar pago del visitante` |
+| P-11 expirar | Plazo de pago vencido | Reserva y Disponibilidad | `Expirar solicitudes vencidas` → `LiberarFranja` |
+| P-12 salida anticipada | Recepción registra la salida | Disponibilidad | `Registrar salida anticipada` → `agenda.liberarResto` |
 
 ---
 
