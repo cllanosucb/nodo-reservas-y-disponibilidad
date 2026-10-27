@@ -16,8 +16,6 @@
 
 Las formas son las del [context map](05-context-map.md#vista-general-del-mapa): recuadro naranja, nuestra área; cajas blancas con borde gris, vecinos supporting; cajas grises punteadas, genéricos; franja gris al pie, Notificaciones (transversal).
 
-> **Nota sobre las imágenes:** la línea ⑩ (equipo portátil compartido con Agenda de eventos) se agregó en esta revisión; hay que dibujarla en los frames de Miro y volver a exportar las imágenes.
-
 ---
 
 ## 1. Capa 1 · Patrón de cada relación
@@ -140,14 +138,14 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 
 ![Lámina A · ACL de Espacios y recursos](img/07-lamina-a-acl-espacios.png)
 
-**Para qué sirve:** Espacios y recursos mantiene el catálogo completo de Nodo (escritorios, salas y salón). A nuestra área solo le interesan las salas de reunión: Disponibilidad necesita saber cuáles se pueden reservar y Reserva necesita su aforo. El ACL filtra lo que no es nuestro y entrega cada dato al contexto que lo usa.
+**Para qué sirve:** Espacios y recursos mantiene el catálogo completo de Nodo (escritorios, salas y salón). A nuestra área solo le interesan las salas que se reservan por franja (las de reunión y la de capacitación) y las unidades de equipo portátil: Disponibilidad necesita saber cuáles se pueden reservar y Reserva necesita el aforo de cada sala. El ACL filtra lo que no es nuestro y entrega cada dato al contexto que lo usa.
 
-**Cuándo actúa:** cuando el catálogo avisa que una sala se creó, cambió o se dio de baja (mensajería async), y cuando Reserva consulta el aforo al registrar una solicitud (API REST).
+**Cuándo actúa:** cuando el catálogo avisa que una sala o una unidad de equipo se creó, cambió o se dio de baja (mensajería async), y cuando Reserva consulta el aforo al registrar una solicitud (API REST).
 
 | Pieza | Qué hace |
 |---|---|
-| Adaptador | Escucha los eventos del catálogo (sala creada, cambiada o dada de baja) y consulta el aforo de una sala. |
-| Traductor | Convierte el tipo y el estado en salas de reunión reservables para Disponibilidad, y la capacidad en aforo para Reserva. |
+| Adaptador | Escucha los eventos del catálogo (sala o equipo creado, cambiado o dado de baja) y consulta el aforo de una sala. |
+| Traductor | Convierte el tipo y el estado en salas reservables y unidades de equipo portátil para Disponibilidad, y la capacidad en aforo para Reserva. |
 | Fachada | `SalasReservables::obtener(salaId)` y `EquipoPortatil::unidades(tipo)` para Disponibilidad, y `AforoDeSala::consultar(salaId)` para Reserva. |
 
 | Espacios y recursos dice | Disponibilidad y Reserva reciben |
@@ -166,7 +164,7 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 
 ![Lámina B · ACL de Tarifas y precios](img/07-lamina-b-acl-tarifas.png)
 
-**Para qué sirve:** Tarifas y precios maneja la lista de precios de Nodo. Reserva no necesita la lista: solo el precio de **su** franja en el momento de confirmar, que conserva aunque la tarifa cambie después. También recibe la cotización de una reserva mensual cuando el cliente la acepta.
+**Para qué sirve:** Tarifas y precios maneja la lista de precios de Nodo. Reserva no necesita la lista: solo el precio de **su** franja (sala y equipo pedido) en el momento de confirmar, que conserva aunque la tarifa cambie después. También recibe la cotización de una reserva mensual cuando el cliente la acepta.
 
 **Cuándo actúa:** al confirmar una reserva (precio vigente) y al aceptar una cotización mensual (API REST).
 
@@ -174,15 +172,15 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 |---|---|
 | Adaptador | Llama a la API de Tarifas y precios para el precio vigente de la franja y la cotización de una reserva mensual. |
 | Traductor | Convierte la tarifa en el precio que conserva la reserva confirmada, y la cotización aceptada en una reserva mensual por confirmar. |
-| Fachada | `PrecioDeFranja::vigente(salaId, franja)` y `ReservaMensual::cotizacion(cotizacionId)`. |
+| Fachada | `PrecioDeFranja::vigente(salaId, franja, equipoPedido)` y `ReservaMensual::cotizacion(cotizacionId)`. |
 
 | Tarifas y precios dice | Reserva recibe |
 |---|---|
 | `"rate_id": "T-07", "unit": "HOUR"` | Precio vigente de la franja: la reserva lo conserva al confirmar |
 | `"rate_id": "T-08"` (tarifa nueva) | No afecta a las reservas confirmadas: conservan su precio |
-| `"rate_id": "T-20", "item": "PROYECTOR"` | Precio del equipo pedido en esa franja: se suma al precio conservado de la reserva |
 | `"quote_status": "ACCEPTED"` | Reserva mensual cotizada: cada fecha cumple las reglas de una reserva normal (HI-09) |
 | `"quote_status": "EXPIRED"` | Cotización vencida (4 días): no aparta la franja (HI-08) |
+| `"rate_id": "T-20", "item": "PROYECTOR"` | Precio del equipo pedido en esa franja: se suma al precio conservado de la reserva |
 
 **Costo y cuándo:** vale porque las tarifas cambian por motivos propios (la dirección las cambia y hay tarifas por temporada). Sin ACL, Reserva tendría que entender la lista de precios en lugar de conservar solo el precio de su franja.
 
