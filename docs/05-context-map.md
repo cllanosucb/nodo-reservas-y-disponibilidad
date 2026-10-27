@@ -18,9 +18,11 @@
 | Caja blanca con borde gris continuo | **Vecino (supporting)** | Otra área del negocio de Nodo, con su propio modelo: Espacios y recursos, Membresías y planes, Tarifas y precios. Hay que acordar qué cruza la frontera. |
 | Caja gris con borde punteado | **Externo (generic)** | No diferencia a Nodo; se integra: Facturación y cobros, Control de acceso físico. |
 | Franja gris con borde punteado, al pie del mapa | **Transversal (generic)** | Lo usan todas las áreas, no solo la nuestra: Notificaciones. |
-| Línea simple con número ①–⑨ | **Relación** | Qué dato o evento cruza. Sin tipo ni dirección. |
+| Línea simple con número ①–⑩ | **Relación** | Qué dato o evento cruza. Sin tipo ni dirección. |
 
-Cada número ①–⑨ tiene su detalle en [Qué cruza cada relación](#3-qué-cruza-cada-relación). Los nombres son los de [01-subdominios.md](01-subdominios.md) y los términos, los de [02-glosario.md](02-glosario.md).
+Cada número ①–⑩ tiene su detalle en [Qué cruza cada relación](#3-qué-cruza-cada-relación). Los nombres son los de [01-subdominios.md](01-subdominios.md) y los términos, los de [02-glosario.md](02-glosario.md).
+
+> **Nota sobre las imágenes:** la línea ⑩ (equipo portátil compartido con Agenda de eventos) se agregó en esta revisión; hay que dibujarla en los frames de Miro y volver a exportar las imágenes.
 
 ---
 
@@ -65,9 +67,9 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 
 | | |
 |---|---|
-| **Le pedimos** | El catálogo de **salas de reunión** reservables. Disponibilidad no crea salas: las recibe. |
+| **Le pedimos** | El catálogo de **salas** reservables (de reunión y de capacitación) y de las **unidades de equipo portátil** (un proyector, tres televisores). Disponibilidad no crea salas ni equipos: los recibe. |
 | **Le entregamos** | Nada. |
-| **Datos que cruzan** | identificador de la sala y tipo de recurso. Los escritorios (flexibles y fijos) y el salón están en el catálogo, pero no se reservan en nuestra área. |
+| **Datos que cruzan** | identificador de la sala o de la unidad de equipo, tipo de recurso y equipo fijo de cada sala (informativo). Los escritorios (flexibles y fijos) y el salón están en el catálogo, pero no se reservan en nuestra área. |
 | **Hotspots resueltos** | **HI-04:** si Espacios y recursos da de baja una sala con reservas futuras, se trata igual que un bloqueo: se reasigna a una sala equivalente, se reprograma o se reembolsa. |
 
 ### ③ Espacios y recursos ↔ Reserva
@@ -83,7 +85,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 
 | | |
 |---|---|
-| **Le pedimos** | El **precio vigente de la franja** al confirmar la reserva: la reserva lo conserva aunque la dirección cambie la tarifa después. También la **cotización de una reserva mensual** cuando el cliente la acepta. |
+| **Le pedimos** | El **precio vigente de la franja** (sala y equipo pedido) al confirmar la reserva: la reserva lo conserva aunque la dirección cambie la tarifa después. También la **cotización de una reserva mensual** cuando el cliente la acepta. |
 | **Le entregamos** | Nada. |
 | **Datos que cruzan** | sala, franja, precio vigente; para la reserva mensual: cliente, sala, días y horario, vigencia de la cotización. |
 | **Reglas que cruzan** | La cotización vence a los 4 días si no se confirma con pago o depósito, y **no aparta la franja** mientras está vigente. |
@@ -125,6 +127,16 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 | **Datos que cruzan** | identificador de la persona, rol, a nombre de quién actúa, sala y horario. |
 | **Hotspots resueltos** | Ninguno. |
 
+### ⑩ Agenda de eventos ↔ Disponibilidad (equipo portátil compartido)
+
+| | |
+|---|---|
+| **Le entregamos** | La asignación de una **unidad de equipo portátil** para la franja de un evento del salón, o la respuesta «no disponible». |
+| **Nos pide** | Ocupar o liberar una unidad de equipo (proyector, televisor) en la franja del evento. |
+| **Datos que cruzan** | tipo de equipo, franja del evento, identificador del evento (como referencia de la ocupación). |
+| **Por qué existe esta línea** | El proyector y los televisores son los mismos para las salas y para el salón (sesión 5: «si está usado en el salón no se puede dar en la sala de capacitación»). Si cada área llevara su propia agenda del equipo, el mismo proyector podría prometerse dos veces. Quien decide si un recurso está libre en una franja es nuestra área (R-08). |
+| **Hotspots resueltos** | **HI-21:** el equipo compartido se agenda en un solo lugar, Disponibilidad; Agenda de eventos lo ocupa como cualquier otra reserva. El salón y las salas siguen sin cruzarse (Separate Ways). |
+
 ---
 
 ## 4. Resumen: qué pedimos y qué entregamos
@@ -140,6 +152,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 | ⑦ | Notificaciones | Transversal | Reserva | enviar el aviso | confirmación, recordatorio, rechazo |
 | ⑧ | Notificaciones | Transversal | Reserva (tras Franja liberada) | enviar el aviso | lista de espera de la franja |
 | ⑨ | Control de acceso físico | Generic | Reserva | quién actúa y su rol | reservas del día |
+| ⑩ | Agenda de eventos | Supporting | Disponibilidad | — | asignación de equipo portátil para sus eventos |
 
 **Por qué estas clasificaciones** (ver [01-subdominios.md](01-subdominios.md)):
 
@@ -153,7 +166,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 
 | Relación descartada | Por qué no se dibuja |
 |---|---|
-| Nuestra área ↔ Agenda de eventos | El salón es un recurso aparte, se alquila por horas o jornadas y pertenece a Agenda de eventos. Nuestra área solo reserva salas de reunión. |
+| Nuestra área ↔ Agenda de eventos, **por los espacios** | El salón es un recurso aparte, se alquila por horas o jornadas y pertenece a Agenda de eventos; nuestra área reserva las salas. Lo único que comparten es el equipo portátil, y por eso existe la línea ⑩. |
 | Disponibilidad ↔ Notificaciones | Lo que se avisa es a **quienes esperaban**, y la lista de espera es de Reserva. |
 | Disponibilidad ↔ Membresías y planes | Si una franja está libre no depende de quién la pida. El estado del miembro solo le importa a Reserva. |
 | Disponibilidad ↔ Facturación y cobros | Una franja no se cobra; se cobra lo que hace una persona con una reserva. |
@@ -174,6 +187,7 @@ Una misma palabra con dos sentidos señala la frontera entre dos contextos:
 | **Aforo** | Límite de asistentes de una reserva | Tarifas y precios: variable que influye en el precio | ③, ④ |
 | **Precio** | Lo que conserva una reserva confirmada | Tarifas y precios: *tarifa* es la lista de precios; *precio*, lo que paga esa persona | ④ |
 | **Evento** | (En DDD) algo que ocurrió: «Reserva confirmada» | Agenda de eventos: un acto en el salón de Nodo | — |
+| **Equipo** | Unidad de equipo portátil que se asigna por franja (proyector, televisor) | Agenda de eventos: *servicio extra* del evento, que incluye además catering subcontratado. Espacios y recursos: equipamiento del catálogo | ②, ⑩ |
 | **Cancelación** | De una reserva | Membresías y planes: baja de un plan al final del ciclo | ⑤ |
 
 ---
@@ -187,7 +201,7 @@ Una misma palabra con dos sentidos señala la frontera entre dos contextos:
 | HI-03 | ¿Quién bloquea una sala? | Recepción, administración o dirección, por mantenimiento o limpieza (R-07). | ① |
 | HI-04 | ¿Qué pasa con las reservas futuras de una sala dada de baja? | Igual que con un bloqueo: se reasignan, se reprograman o se reembolsan. | ② |
 | HI-05 | ¿Los escritorios se reservan por franja? | No: el flexible se usa según el plan y el fijo se asigna. Disponibilidad solo recibe salas de reunión. | ② |
-| HI-06 / HI-07 | ¿Eventos y salas comparten espacio? | El salón es un recurso aparte de Agenda de eventos; nuestra área solo reserva salas de reunión. La línea se quitó. | — |
+| HI-06 / HI-07 | ¿Eventos y salas comparten espacio? | El salón es un recurso aparte de Agenda de eventos; nuestra área reserva las salas. No hay línea por los espacios. | — |
 | HI-08 | ¿La cotización aparta la franja? | No. Vence a los 4 días si no se confirma. | ④ |
 | HI-09 | ¿La reserva mensual cumple las mismas reglas? | Sí: margen de 15 min, aforo y anticipación en cada fecha. | ④ |
 | HI-10 | ¿Qué pasa si una fecha de la serie ya está ocupada? | Se confirman las libres y recepción coordina otra sala u horario para la ocupada. | ④ |
@@ -201,6 +215,7 @@ Una misma palabra con dos sentidos señala la frontera entre dos contextos:
 | HI-18 | ¿Cómo se anula el recordatorio si la reserva se cancela? | Reserva pide anularlo y Notificaciones lo anula. | ⑦ |
 | HI-19 | ¿Cómo confirma el visitante? | Pagando por adelantado (R-05, P-10). | ⑥ |
 | HI-20 | ¿La reserva da acceso al visitante? | Entra con apertura manual o un código temporal de recepción. | ⑨ |
+| HI-21 | ¿Quién lleva la agenda del equipo portátil que usan las salas y el salón? | Disponibilidad, en un solo lugar; Agenda de eventos lo ocupa para sus eventos. | ⑩ |
 
 **Dónde protegerse:** en ⑤ (Membresías y planes), ②–③ (Espacios y recursos) y ④ (Tarifas y precios). Sus modelos cambian por motivos propios (planes nuevos, salas nuevas, tarifas por temporada) y no queremos que eso nos obligue a cambiar nuestras reglas.
 
