@@ -102,7 +102,7 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 |---|---|
 | **Enunciado** | No existe una reserva confirmada cuya sala, o cuyo equipo pedido, figure como libre en su franja, ni una franja ocupada por una reserva que no está confirmada o provisional. |
 | **Ejemplo del que sale** | Ana tiene confirmada la Sala B de 10:00 a 11:00 → en «Salas disponibles» esa franja **no** aparece libre. |
-| **Origen** | P-01 y R-01. |
+| **Origen** | P-01, R-01 y R-08. |
 | **Casos límite** | **Es la única invariante que cruza los dos contextos.** Se garantiza así: la reserva se confirma solo después de que las agendas ocuparon la sala y una unidad de cada equipo pedido; si la sala no se puede ocupar, la solicitud se rechaza (P-08) o entra en la lista de espera (P-02); si la sala sí pero falta equipo, se libera la sala y la solicitud se rechaza (R-08). |
 | **¿Corazón del aggregate?** | **No dentro de un solo aggregate.** Se cumple con la secuencia «ocupar la franja → confirmar la reserva». |
 
