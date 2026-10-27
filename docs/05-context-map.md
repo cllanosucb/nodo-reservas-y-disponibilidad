@@ -22,8 +22,6 @@
 
 Cada número ①–⑩ tiene su detalle en [Qué cruza cada relación](#3-qué-cruza-cada-relación). Los nombres son los de [01-subdominios.md](01-subdominios.md) y los términos, los de [02-glosario.md](02-glosario.md).
 
-> **Nota sobre las imágenes:** la línea ⑩ (equipo portátil compartido con Agenda de eventos) se agregó en esta revisión; hay que dibujarla en los frames de Miro y volver a exportar las imágenes.
-
 ---
 
 ## 1. Propósito
