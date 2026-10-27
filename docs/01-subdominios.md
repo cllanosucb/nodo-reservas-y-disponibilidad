@@ -22,7 +22,7 @@ Vive de tres fuentes de ingreso:
 
 El equipo es pequeño (recepción, un responsable de operaciones y la dirección) y hoy gestiona todo con una hoja de cálculo, un calendario compartido y grupos de WhatsApp. Quieren un sistema que sostenga la operación actual y que pueda crecer cuando abran una segunda sede.
 
-**Nuestra área, Reservas y disponibilidad,** decide qué espacio está libre y quién se queda con él. Cubre las **salas de reunión**, que se reservan por franja horaria (segunda fuente de ingreso). Quedan fuera los escritorios, que no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. También queda fuera el salón, que pertenece a Agenda de eventos.
+**Nuestra área, Reservas y disponibilidad,** decide qué espacio está libre y quién se queda con él. Cubre las **salas que se reservan por franja horaria** (segunda fuente de ingreso): hoy, dos salas de reunión (de 8 y 16 personas) y la sala de capacitación (40 personas), según el experto. Cubre también el **equipo portátil** que se pide junto con una sala (proyector, televisores): hay pocas unidades y no se pueden asignar dos veces a la vez. Quedan fuera los escritorios, que no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. También queda fuera el salón, que pertenece a Agenda de eventos.
 
 Las demás áreas la rodean: Espacios y recursos define qué recursos existen, Membresías y planes dice quién puede reservar, Tarifas y precios fija cuánto cuesta, Facturación y cobros cobra y Notificaciones avisa.
 
@@ -66,3 +66,7 @@ La decisión de clasificación y sus hotspots están en [decisiones/0002-clasifi
 | Recepción | Gestiona hoy las reservas en el calendario compartido, registra reservas a nombre de otra persona, envía a mano los avisos por WhatsApp y abre la puerta a los visitantes. |
 | Responsable de operaciones | Es quien relata la entrevista: reglas de reserva, margen de 15 min, cancelación y cuándo una reserva está confirmada. Junto con la dirección, aprueba los eventos. |
 | Dirección | Fija y ajusta las tarifas, y aprueba los eventos antes de confirmarlos. |
+| Miembro | Usuario diario: sabe cómo pide hoy una sala, qué información necesita ver para elegirla y qué le molesta del proceso actual (depender de recepción, avisos que no llegan). |
+| Visitante | Usuario sin membresía: aporta el caso de quien reserva y paga por su cuenta, sin plan ni horas incluidas. |
+
+Los usuarios también son expertos del dominio: viven el proceso real y aportan los casos que el equipo de Nodo no siempre ve (sesión 1).
