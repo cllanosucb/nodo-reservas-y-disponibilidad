@@ -77,7 +77,7 @@ ListaDeEsperaRepository
 | Método | Qué hace |
 |---|---|
 | `Reserva.solicitar(titular, salaId, franja, asistentes, equipoPedido, registradaPor?, ahora)` | Fija el estado Solicitada, guarda el equipo pedido, calcula la Anticipación (INV-R4), distingue miembro, visitante y reserva asistida, y asigna `PolíticaDeCancelación.estándar()`. |
-| `AgendaDelRecurso.abrir(salaId, fecha)` | Crea la agenda vacía la primera vez que se pide esa sala ese día. |
+| `AgendaDelRecurso.abrir(recursoId, fecha)` | Crea la agenda vacía la primera vez que se pide ese recurso (una sala o una unidad de equipo) ese día. |
 | `ListaDeEspera.abrir(salaId, franja)` | Crea la lista vacía la primera vez que alguien espera esa franja. |
 
 Ninguno coordina otros aggregates: una clase factory solo envolvería un constructor.

@@ -59,8 +59,8 @@ La sala o la unidad de equipo (Espacios y recursos) y la reserva (contexto Reser
 
 | ID | Invariante |
 |---|---|
-| INV-D1 | Nunca dos ocupaciones se solapan en la misma sala (reservas confirmadas, provisionales o bloqueos). |
-| INV-D2 | Siempre quedan 15 min de margen, también frente a un bloqueo. |
+| INV-D1 | Nunca dos ocupaciones se solapan en el mismo recurso (reservas confirmadas, provisionales, eventos del salón o bloqueos). |
+| INV-D2 | En una sala siempre quedan 15 min de margen, también frente a un bloqueo. El equipo portátil no lleva margen. |
 | INV-D3 | Una franja bloqueada no admite nuevas ocupaciones. Se puede bloquear sobre una reserva confirmada: queda como reserva afectada (P-09). |
 | INV-D4 | Solo se libera una ocupación existente, y una sola vez. |
 | INV-D5 | El exceso de tiempo nunca invade una reserva confirmada, contando el margen. |
@@ -84,7 +84,7 @@ La sala o la unidad de equipo (Espacios y recursos) y la reserva (contexto Reser
 
 ### Concurrencia: el último cupo
 
-Hay una agenda **por sala y por día**, con versión (bloqueo optimista). Si dos solicitudes ocupan la misma agenda a la vez, una gana; la otra reintenta, encuentra la franja ocupada y se rechaza o entra en la lista de espera (HI-01). La agenda es pequeña, así que solo compiten quienes piden la misma sala el mismo día.
+Hay una agenda **por recurso y por día**, con versión (bloqueo optimista). Si dos solicitudes ocupan la misma agenda a la vez, una gana; la otra reintenta, encuentra la franja ocupada y se rechaza o entra en la lista de espera (HI-01). La agenda es pequeña, así que solo compiten quienes piden el mismo recurso (la misma sala o la misma unidad de equipo) el mismo día.
 
 **Salas disponibles** es un modelo de lectura aparte, que se actualiza con los eventos de la agenda; no es este aggregate. Muestra también el equipo fijo de cada sala (informativo) y cuántas unidades de equipo portátil quedan libres en la franja.
 
@@ -260,7 +260,7 @@ Cada domain event del modelo sale de una nota naranja del muro ([03-eventstormin
 |---|---|
 | D-53 | Un bloqueo se puede retirar antes de su fin, solo por quien puede bloquear; al retirarlo se emite *Franja liberada*. |
 | D-54 | Dinero(monto, moneda) sin fijar la moneda en el modelo: la define Tarifas y precios. |
-| D-55 | Una agenda por sala y por día (salaId + fecha), con versión para la concurrencia. |
+| D-55 | Una agenda por recurso y por día (recursoId + fecha), con versión para la concurrencia. El recurso es una sala o una unidad de equipo portátil (D-62). |
 | D-56 | Lista de espera es un aggregate propio, por sala y franja, que protege INV-R9. |
 | D-61 | `ocupar` devuelve «ocupada» o «no disponible» y no emite evento: el muro no tiene la nota «Franja ocupada». |
 | D-62 | El equipo portátil usa el mismo aggregate Agenda del recurso, una agenda por unidad y sin margen. La reserva confirma solo si la sala y una unidad de cada equipo pedido quedaron ocupadas; si falta equipo, no se confirma una parte del pedido. |
