@@ -90,6 +90,10 @@ Al miembro no se le exige pago por adelantado: el uso se descuenta de las horas 
 
 *Variante:* si la solicitud no cumple las reglas o pierde la última franja, el Sistema de reservas la rechaza y Notificaciones avisa al Miembro (P-08, Solicitud rechazada). Si la franja está ocupada, la solicitud entra en la lista de espera (P-02).
 
+*Variante con equipo:* en el paso 2 el miembro puede pedir equipo portátil (proyector o televisor). En el paso 4 el sistema asigna una unidad libre de cada equipo en la misma franja; si no hay, rechaza la solicitud con ese motivo (R-08).
+
+*Variante de uso:* si el miembro termina antes, Recepción registra la salida anticipada y el sistema libera el tramo que falta y avisa a la lista de espera (P-12, Franja liberada).
+
 ### 4.2 Historia 2: Cancelar con menos de 4 h y avisar a la lista de espera
 
 **Hoy (as-is)**
@@ -98,7 +102,7 @@ Al miembro no se le exige pago por adelantado: el uso se descuenta de las horas 
 |---|---|---|
 | 1 | Miembro avisa la cancelación a Recepción | |
 | 2 | Recepción comprueba si faltan menos de 4 h para el inicio de la reserva | |
-| 3 | Recepción anota el cobro de la franja completa en la hoja de cálculo | El cobro se anota a mano |
+| 3 | Recepción anota el cobro en la hoja de cálculo | El cobro se anota a mano y depende de su criterio: hoy aplica del 10 al 20 % según si había otras solicitudes (experto, sesión 2) |
 | 4 | Facturación y cobros suma el cobro a la factura mensual | |
 | 5 | Recepción libera la franja en la hoja de cálculo y el calendario compartido | La franja se libera a mano |
 | 6 | Recepción envía el aviso de sala liberada por WhatsApp a las personas en lista de espera | Recepción tiene que estar pendiente de quién espera |
@@ -114,6 +118,8 @@ Al miembro no se le exige pago por adelantado: el uso se descuenta de las horas 
 | 5 | Notificaciones envía el aviso de franja liberada a todas las personas en lista de espera | P-06, Lista de espera notificada |
 
 *Variante:* con 4 h o más de anticipación no hay cobro; se cumplen los pasos 1, 3, 4 y 5.
+
+*Del as-is al to-be:* el sistema aplica una sola regla, la del enunciado y la entrevista escrita: con menos de 4 h se cobra la franja completa (H-08). El porcentaje variable de hoy era una decisión manual de recepción.
 
 ### 4.3 Historia 3: Reserva asistida
 
@@ -176,4 +182,6 @@ Al miembro no se le exige pago por adelantado: el uso se descuenta de las horas 
 | Cobro de la cancelación tardía | Se anota a mano en la hoja de cálculo | La penalización se registra y se entrega a Facturación y cobros | P-05 |
 | Liberar la franja | Se libera a mano | Se libera al cancelar | P-07 |
 | Reserva asistida | Recepción anota todo a mano | Recepción la registra en el sistema, que aplica las mismas reglas | R-03 |
+| Equipo portátil | Se presta a pedido y puede estar ya prometido en otra sala o en el salón | El sistema lo asigna por franja y nunca dos veces a la vez | R-08 |
+| Sala que se desocupa antes | Recepción la ofrece de palabra a quien esté cerca | Se libera el tramo que falta y se avisa a la lista de espera | P-12 |
 | Pago del visitante | El pago y la confirmación dependen de recepción | El pago registrado dispara la confirmación | R-05, P-10 |

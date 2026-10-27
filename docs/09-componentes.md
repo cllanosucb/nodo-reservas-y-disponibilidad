@@ -43,6 +43,7 @@ INV-R1 (toda reserva confirmada tiene su franja ocupada) cruza los dos contextos
 | Penalización por cancelación tardía | `PolíticaDeCancelación` (value object) | Solo depende de la reserva y de su política. |
 | Confirmar | `Reserva.confirmar()` | Usa sus propios datos y los que recibe (al día, precio vigente). |
 | Reasignar a una sala equivalente | Recepción (P-09) | Es una decisión de una persona, no una regla automática. |
+| Elegir qué unidad de equipo asignar | Application service: prueba las unidades del tipo pedido hasta que una agenda acepta la franja | No hay una regla de negocio para elegir entre unidades iguales; la regla «sin solapes» la protege cada agenda (INV-D1). |
 
 Crear un servicio para estas reglas vaciaría los aggregates (modelo anémico).
 
@@ -59,7 +60,7 @@ ReservaRepository
   guardar(reserva)
 
 AgendaDelRecursoRepository
-  de(salaId, fecha): AgendaDelRecurso?
+  de(recursoId, fecha): AgendaDelRecurso?     // una sala o una unidad de equipo
   guardar(agenda)            // falla si cambió la versión (bloqueo optimista)
 
 ListaDeEsperaRepository
@@ -75,7 +76,7 @@ ListaDeEsperaRepository
 
 | Método | Qué hace |
 |---|---|
-| `Reserva.solicitar(titular, salaId, franja, asistentes, registradaPor?, ahora)` | Fija el estado Solicitada, calcula la Anticipación (INV-R4), distingue miembro, visitante y reserva asistida, y asigna `PolíticaDeCancelación.estándar()`. |
+| `Reserva.solicitar(titular, salaId, franja, asistentes, equipoPedido, registradaPor?, ahora)` | Fija el estado Solicitada, guarda el equipo pedido, calcula la Anticipación (INV-R4), distingue miembro, visitante y reserva asistida, y asigna `PolíticaDeCancelación.estándar()`. |
 | `AgendaDelRecurso.abrir(salaId, fecha)` | Crea la agenda vacía la primera vez que se pide esa sala ese día. |
 | `ListaDeEspera.abrir(salaId, franja)` | Crea la lista vacía la primera vez que alguien espera esa franja. |
 
@@ -92,7 +93,7 @@ SolicitarReserva.ejecutar(cmd)
   ahora   = reloj.ahora()
   franja  = Franja(cmd.inicio, cmd.fin)
   reserva = Reserva.solicitar(cmd.titular, cmd.salaId, franja,
-              cmd.asistentes, cmd.registradaPor, ahora)   // INV-R4
+              cmd.asistentes, cmd.equipoPedido, cmd.registradaPor, ahora)   // INV-R4
   aforo   = aforoDeSala.consultar(cmd.salaId)             // ACL ③
   estado  = estadoDelMiembro.consultar(cmd.titular)       // ACL ⑤
   si estado = sin respuesta: derivar a recepción (reserva asistida)   // HI-13
@@ -103,6 +104,18 @@ SolicitarReserva.ejecutar(cmd)
   r = agenda.ocupar(franja, reserva.id, provisional = reserva.esVisitante)
   agendas.guardar(agenda)       // versión cambiada: reintenta una vez
 
+  unidades = []
+  si r = ocupada:                                         // R-08: equipo portátil pedido
+    para cada (tipo, cantidad) en cmd.equipoPedido:
+      repetir cantidad veces:
+        u = primera unidad de equipoPortatil.unidades(tipo) cuya agenda acepte
+              ocupar(franja, reserva.id, provisional = reserva.esVisitante)   // cada agenda se guarda aparte
+        si no hay u:
+          liberar la sala y las unidades ya ocupadas      // no se confirma una parte del pedido
+          reserva.rechazar("no hay " + tipo + " libre")   // Solicitud rechazada
+          guardar, publicar y terminar
+        unidades.agregar(u)
+
   si r = no disponible:
     reserva.rechazar("franja ocupada")                    // Solicitud rechazada
     lista = listas.de(cmd.salaId, franja) ?? ListaDeEspera.abrir(cmd.salaId, franja)
@@ -111,11 +124,11 @@ SolicitarReserva.ejecutar(cmd)
   si no, si reserva.esVisitante:
     reserva.dejarProvisional(plazoDePago)                 // INV-R6
   si no:
-    precio = precioDeFranja.vigente(cmd.salaId, franja)   // ACL ④
-    reserva.confirmar(estado.alDia, precio, ahora)        // Reserva confirmada
+    precio = precioDeFranja.vigente(cmd.salaId, franja, cmd.equipoPedido)   // ACL ④
+    reserva.confirmar(estado.alDia, unidades, precio, ahora)   // Reserva confirmada
 
   si falla reservas.guardar(reserva):
-    agenda.liberar(reserva.id); agendas.guardar(agenda)   // compensación: INV-R1
+    liberar la sala y las unidades ocupadas              // compensación: INV-R1
   eventos.publicar(reserva.eventos)
   devolver reserva.id
 ```
@@ -124,6 +137,7 @@ SolicitarReserva.ejecutar(cmd)
 - El application service **coordina** (pide datos, llama a los aggregates, guarda y publica); las reglas las deciden `Reserva` y `AgendaDelRecurso`.
 - **Ocupar antes de confirmar** cumple INV-R1 sin modificar dos aggregates en la misma transacción. Si guardar la reserva falla, se libera la franja.
 - Si la franja está ocupada, la solicitud queda **rechazada** y la persona se **añade a la lista de espera** (D-57): quien espera no tiene reserva.
+- El equipo se ocupa **después** de la sala y con la misma franja: si falta una unidad, se deshace todo y se rechaza (D-62). No hay lista de espera por equipo: la persona puede volver a pedir la sala sin él.
 
 ### Cancelar una reserva
 
@@ -136,7 +150,8 @@ CancelarReserva.ejecutar(cmd)
 
 // Eventos en proceso
 LiberarFranja.al(Reserva cancelada | Solicitud expirada)    // Disponibilidad, P-07 y P-11
-  agenda.liberar(e.reservaId)                               // Franja liberada
+  para la sala y cada unidad de equipo de la reserva:
+    agenda.liberar(e.reservaId)                             // Franja liberada
 AvisarListaDeEspera.al(Franja liberada)                     // Reserva, P-06
   lista.notificarATodos()                                   // Lista de espera notificada → Notificaciones (cola)
 ```
@@ -150,14 +165,16 @@ AvisarListaDeEspera.al(Franja liberada)                     // Reserva, P-06
 | Expirar solicitudes vencidas | Periódico: `reloj` y `provisionalesVencidas(ahora)` → *Solicitud expirada* → *Franja liberada* | P-11, D-60 |
 | Bloquear sala · Retirar bloqueo | `agenda.bloquear` → *Sala bloqueada* · `agenda.retirarBloqueo` → *Franja liberada* | R-07, D-53 |
 | Resolver reserva afectada | Recepción u operaciones elige reasignar, reprogramar o reembolsar | P-09 |
-| Registrar exceso de tiempo | `agenda.verificarExceso` → *Horas extra registradas* o desalojar | R-06, INV-D5 |
+| Registrar exceso de tiempo | `agenda.verificarExceso` → `reserva.registrarHorasExtra` → *Horas extra registradas*, o desalojar | R-06, INV-D5 |
+| Registrar salida anticipada | Recepción: `agenda.liberarResto(reservaId, ahora)` en la sala y en cada equipo asignado → *Franja liberada* → aviso a la lista de espera | P-12, INV-D4, H-13 |
+| Ocupar equipo para un evento | Lo pide Agenda de eventos por la API de ⑩: `agenda.ocupar(franja, eventoId)` en una unidad libre del tipo; y `liberar` si el evento se cae | R-08, ⑩ |
 
 ---
 
 ## 6. Dependencias
 
 - El **dominio** no depende de nada externo.
-- Los **application services** dependen de interfaces: repositorios, `EstadoDelMiembro`, `AforoDeSala`, `PrecioDeFranja`, `Reloj` y el publicador de eventos. La **infraestructura** las implementa (ACL y cola hacia Notificaciones, [07-integracion.md](07-integracion.md)).
+- Los **application services** dependen de interfaces: repositorios, `EstadoDelMiembro`, `AforoDeSala`, `PrecioDeFranja`, `EquipoPortatil`, `Reloj` y el publicador de eventos. La **infraestructura** las implementa (ACL y cola hacia Notificaciones, [07-integracion.md](07-integracion.md)).
 - Los aggregates **no se conocen**: ocupar es una llamada en proceso desde el application service; liberar y avisar a la lista de espera van por eventos en proceso. Cada aggregate se guarda en su propia transacción.
 - Cada bounded context es un **módulo del monolito**, con su dominio, su aplicación y su infraestructura; el dominio no depende de las otras capas.
 
@@ -167,12 +184,31 @@ AvisarListaDeEspera.al(Franja liberada)                     // Reserva, P-06
 
 | Flujo | Secuencia |
 |---|---|
-| **1 · Reservar una sala** | Controller → **SolicitarReserva** → ACL (aforo ③, al día ⑤) → **AgendaDelRecurso.ocupar** (Disponibilidad). Ocupada → **Reserva.confirmar** (+ precio vigente ④) → *Reserva confirmada* → Notificaciones, Membresías y planes, Control de acceso físico. No disponible → *Solicitud rechazada* (aviso por Notificaciones) → **ListaDeEspera.añadir** → *Añadido a la lista de espera*. |
+| **1 · Reservar una sala** | Controller → **SolicitarReserva** → ACL (aforo ③, al día ⑤) → **AgendaDelRecurso.ocupar** (Disponibilidad: la sala y, si se pidió, una unidad de cada equipo). Ocupada → **Reserva.confirmar** (+ precio vigente ④) → *Reserva confirmada* → Notificaciones, Membresías y planes, Control de acceso físico. No disponible → *Solicitud rechazada* (aviso por Notificaciones) → **ListaDeEspera.añadir** → *Añadido a la lista de espera*. |
 | **2 · Cancelar una reserva** | Controller → **CancelarReserva** → *Reserva cancelada* (+ *Penalización aplicada* si faltan menos de 4 h) → **LiberarFranja** (Disponibilidad) → *Franja liberada* → **AvisarListaDeEspera** (Reserva) → *Lista de espera notificada* → Notificaciones (cola). |
 
 ---
 
-## 8. Decisiones de esta etapa
+## 8. Lectura, módulos y lo que no se crea
+
+**Modelo de lectura «Salas disponibles»: CQRS ligero, justificado.** Escribir necesita el aggregate con sus reglas (`AgendaDelRecurso.ocupar`); mostrar qué está libre solo necesita datos planos de todas las salas y equipos de un día. Por eso «Salas disponibles» es una consulta aparte que devuelve una vista sin reglas y nunca decide si una franja cabe: eso lo decide la agenda cuando alguien intenta ocuparla. No se separa el almacenamiento (CQRS completo) porque lectura y escritura todavía no divergen tanto como para pagar dos modelos (sesión 6).
+
+**Módulos por concepto, no por capa técnica.** Cada bounded context es un módulo del monolito con el nombre del glosario (Disponibilidad, Reserva); dentro, su dominio, su aplicación y su infraestructura. Los nombres de clases y métodos son los del glosario: `AgendaDelRecurso.ocupar`, `Reserva.cancelar`, `ListaDeEspera.añadir`.
+
+**Lo que se decidió no crear** (sesión 6: «diseñar también es decidir qué no crear»):
+
+| No se crea | Por qué |
+|---|---|
+| Domain services | Cada regla tiene dueño (sección 2). |
+| Clases factory | La creación es simple: métodos en la raíz (sección 4). |
+| Repositorios de Ocupación, Bloqueo o EnEspera | Viajan con su raíz. |
+| Repositorio de miembros | El miembro no es nuestro: lo da el ACL ⑤. |
+| Un aggregate aparte para el equipo | Un equipo portátil es un recurso más con su agenda: la misma Agenda del recurso, sin margen (D-62). |
+| Un evento «Franja ocupada» | No está en el muro; el hecho visible es *Reserva confirmada* (D-61). |
+
+---
+
+## 9. Decisiones de esta etapa
 
 | ID | Decisión |
 |---|---|
@@ -180,3 +216,5 @@ AvisarListaDeEspera.al(Franja liberada)                     // Reserva, P-06
 | D-58 | Componentes en pseudocódigo neutro; lenguaje y estructura de carpetas pendientes hasta el prototipo; repositorios en memoria. |
 | D-59 | Ningún domain service: cada regla tiene dueño. |
 | D-60 | Expirar solicitudes vencidas: application service periódico, solo en la tabla. |
+| D-65 | «Salas disponibles» es una consulta de solo lectura (CQRS ligero), no un aggregate. |
+| D-66 | Elegir la unidad de equipo es coordinación del application service, no un domain service. |
