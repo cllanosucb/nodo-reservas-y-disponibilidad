@@ -33,12 +33,20 @@ Los términos del muro son los de [02-glosario.md](02-glosario.md).
 | Reserva asistida | Reserva | ¿Qué cambia cuando recepción registra la reserva (anticipación de 3 a 24 h o a nombre de un invitado)? |
 | Cancelación | Reserva | ¿Qué ocurre cuando una reserva se cancela: cobro, liberación de la franja y aviso a la lista de espera? |
 | Visitante | Reserva | ¿Cómo confirma su reserva una persona sin membresía? |
+<<<<<<< HEAD
 | Uso de la sala | Reserva | ¿Qué pasa si alguien se queda más tiempo del reservado? |
+=======
+| Uso de la sala | Reserva | ¿Qué pasa si alguien se queda más tiempo del reservado, o se va antes? |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ### 2.2 Qué queda fuera
 
 - **Escritorios:** no se reservan. El flexible se usa según el plan de membresía y el fijo se asigna a un miembro.
 - **Salón:** pertenece a Agenda de eventos.
+<<<<<<< HEAD
+=======
+- **Catálogo de equipos y su precio:** qué equipos existen lo dice Espacios y recursos y cuánto cuestan, Tarifas y precios. Nuestra área solo decide **si una unidad está libre en una franja** y la asigna (R-08). El equipo fijo de una sala no se reserva aparte.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 - **Cotizaciones** de eventos o de reservas mensuales: vencen a los 4 días y no bloquean el recurso; pertenecen a Tarifas y precios y a Agenda de eventos.
 - **Cobro, cálculo de montos y envío de avisos:** pertenecen a Facturación y cobros y a Notificaciones. En el muro aparecen con la etiqueta «(vecino: …)», porque Reserva solo los dispara.
 
@@ -75,6 +83,10 @@ Los términos del muro son los de [02-glosario.md](02-glosario.md).
 | R-05 | El visitante paga por adelantado dentro de un plazo límite; mientras tanto, la franja queda apartada de forma provisional | Visitante | Ninguna reserva de visitante se confirma sin pago por adelantado |
 | R-06 | Si hay una reserva posterior confirmada, quien se excede debe desalojar; si no la hay, puede seguir y se registran horas extra | Uso de la sala | El exceso de tiempo nunca invade una reserva confirmada |
 | R-07 | Solo recepción, administración o dirección bloquean una sala, por mantenimiento o limpieza | Preparación | Una franja bloqueada no se puede reservar |
+<<<<<<< HEAD
+=======
+| R-08 | El equipo portátil pedido con la reserva (proyector, televisor) debe tener una unidad libre en toda la franja; una unidad no se asigna dos veces a la vez, ni siquiera entre una sala y el salón | Reserva | Una unidad de equipo nunca está en dos ocupaciones que se solapan |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ### 4.2 Políticas
 
@@ -93,6 +105,10 @@ Una política es una reacción a un evento: «cuando… → …».
 | P-09 | Cuando se bloquea una franja que tiene una reserva confirmada → resolver la reserva afectada | Sala bloqueada | Reserva reasignada / Reserva reprogramada / Reembolso solicitado |
 | P-10 | Cuando se registra el pago por adelantado de un visitante → confirmar su reserva | Pago por adelantado registrado | Reserva confirmada |
 | P-11 | Cuando vence el plazo de pago de un visitante sin pago registrado → expirar la solicitud y liberar la franja | Plazo de pago vencido | Solicitud expirada → Franja liberada |
+<<<<<<< HEAD
+=======
+| P-12 | Cuando recepción registra una salida anticipada → liberar el tramo que falta de la franja | Salida anticipada registrada (comando de recepción) | Franja liberada → P-06 |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ### 4.3 Modelo de lectura
 
@@ -110,6 +126,10 @@ Una política es una reacción a un evento: «cuando… → …».
 - **Membresías y planes:** indica si el miembro está al día y cuántas horas incluidas tiene.
 - **Facturación y cobros:** registra el pago por adelantado del visitante y cobra la penalización, las horas extra y los reembolsos.
 - **Notificaciones:** envía por WhatsApp o correo la confirmación, el recordatorio, el rechazo y el aviso a la lista de espera.
+<<<<<<< HEAD
+=======
+- **Agenda de eventos:** usa el mismo equipo portátil en el salón, así que también lo ocupa por franja (R-08).
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ### 4.5 Hotspots
 
@@ -122,11 +142,22 @@ Una política es una reacción a un evento: «cuando… → …».
 | H-05 | ¿Qué pasa si el plan vence entre la solicitud y la confirmación? | R-02 | Vale el estado al momento de confirmar: si el plan ya no está activo o al día, no se confirma. | R-02, P-08 |
 | H-06 | ¿Unirse a la lista de espera es automático o lo elige el miembro? | P-02 | Es automático cuando la franja está ocupada. | P-02 |
 | H-07 | Cuando se libera una franja, ¿se avisa a todos o por orden de llegada? | Lista de espera notificada | A todos; no hay asignación automática: la franja la toma quien la reserve. | P-06 |
+<<<<<<< HEAD
 | H-08 | Pasadas las 4 h, ¿se cobra el 10 al 20 % o la franja completa? | Penalización aplicada | La franja completa. | P-05 |
+=======
+| H-08 | Pasadas las 4 h, ¿se cobra el 10 al 20 % o la franja completa? | Penalización aplicada | La franja completa. Así lo dicen el enunciado y la entrevista escrita. En la entrevista oral el experto contó que hoy recepción aplica del 10 al 20 % a su criterio: es la práctica manual del as-is ([04-domain-stories.md](04-domain-stories.md), historia 2), no la regla del sistema. | P-05 |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | H-09 | ¿La reserva asistida usa la misma regla de anticipación? | R-03 | No: aplica de 3 a 24 h; con menos de 3 h no se puede reservar. | R-03 |
 | H-10 | ¿El escritorio flexible se reserva por franja o por día? | (línea retirada) | No se reserva: se usa según el plan de membresía. | Fuera del alcance ([Qué queda fuera](#22-qué-queda-fuera)) |
 | H-11 | ¿El visitante confirma igual que un miembro o solo con recepción? | Reserva solicitada (visitante) | Debe pagar por adelantado dentro de un plazo límite; mientras tanto, la franja queda apartada de forma provisional. Si no paga, la solicitud expira. | R-05, P-10, P-11 |
 | H-12 | ¿Qué ocurre cuando no se cumplen las reglas? | P-01 | La solicitud se rechaza y se avisa a quien la pidió. | P-08, Solicitud rechazada |
+<<<<<<< HEAD
+=======
+| H-13 | ¿Qué pasa si alguien se va antes de que termine su franja? | Uso de la sala | Recepción lo sabe y puede dar la sala a otros; es quien cambia el estado (sesión 2). La reserva se cobra completa (decisión del equipo: no hay reembolso parcial). | P-12, Franja liberada |
+| H-14 | ¿Se puede pedir equipo junto con la sala? ¿Qué pasa si ya está en uso? | Reserva solicitada | Sí: proyector, televisor o equipo de conferencias (sesión 1). Un equipo asignado no está disponible y no se sobreasigna; hay un proyector y tres televisores, compartidos con el salón (sesión 5). Si no hay unidad libre, la solicitud se rechaza. | R-08, P-08 |
+| H-15 | ¿El aforo es un límite estricto? | R-04 | El experto dijo en la entrevista oral que es más bien informativo; el enunciado dice que el sistema debe evitar el sobrecupo. Decisión: límite estricto, porque es parte de la promesa del core. Cobrar por cantidad de personas es de Tarifas y precios. | R-04 |
+| H-16 | ¿Qué salas se reservan por franja y cuáles tienen margen? | Salas disponibles | Dos salas de reunión (8 y 16 personas) y la sala de capacitación (40). El margen de 15 min aplica a salas y oficinas privadas; el salón lleva 1 h y es de Agenda de eventos (sesión 2). | R-01 |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -139,7 +170,11 @@ Recepción, administración o dirección — Bloquear sala → ⟨R-07⟩ → **
 Si la franja tenía una reserva confirmada: **Sala bloqueada** → {P-09} → Recepción u operaciones — Resolver reserva afectada → **Reserva reasignada** / **Reserva reprogramada** / **Reembolso solicitado** (vecino: Facturación y cobros).
 
 **5.2 Reserva · Reserva**
+<<<<<<< HEAD
 [Salas disponibles] ← Miembro — Solicitar reserva → **Reserva solicitada** → {P-01} → ⟨R-02, R-04⟩ → **Reserva confirmada** → [Salas disponibles]
+=======
+[Salas disponibles] ← Miembro — Solicitar reserva (con o sin equipo portátil) → **Reserva solicitada** → {P-01} → ⟨R-02, R-04, R-08⟩ → **Reserva confirmada** → [Salas disponibles]
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 | Desde | Resultado |
 |---|---|
@@ -164,6 +199,10 @@ Si vence el plazo de pago: {P-11} → **Solicitud expirada** → **Franja libera
 
 **5.6 Uso de la sala · Reserva**
 Recepción — Registrar exceso de tiempo → ⟨R-06⟩ → **Horas extra registradas** (vecino: Facturación y cobros). Si hay una reserva posterior confirmada, la persona debe desalojar la sala.
+<<<<<<< HEAD
+=======
+Recepción — Registrar salida anticipada → {P-12} → **Franja liberada** (Disponibilidad, solo el tramo que falta) → {P-06} → **Lista de espera notificada**.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -179,6 +218,11 @@ Recepción — Registrar exceso de tiempo → ⟨R-06⟩ → **Horas extra regis
 | La lista de espera es una rama de la reserva | Una línea propia | Es consecuencia de una solicitud sobre una franja ocupada |
 | El rechazo es un evento: «Solicitud rechazada» | Dejarlo solo como regla | Permite avisar la negativa a quien pidió y activar políticas posteriores |
 | El pago del visitante es un evento del vecino que dispara la confirmación | Una regla sin evento | El visitante no tiene plan: la confirmación depende de un hecho que ocurre en Facturación y cobros |
+<<<<<<< HEAD
+=======
+| El equipo portátil se asigna por franja (R-08), dentro de la reserva de la sala | Un atributo fijo de la sala, o una línea aparte del muro | Hay pocas unidades que se mueven entre salas y salón: el riesgo es el mismo que el de la sala (dos usos a la vez), pero se pide en la misma solicitud |
+| La salida anticipada es un comando de recepción, no una cancelación | Tratarla como cancelación | La reserva ya empezó: no se cancela ni se reembolsa; solo se libera el tramo que falta |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -198,6 +242,13 @@ Recepción — Registrar exceso de tiempo → ⟨R-06⟩ → **Horas extra regis
 | Un visitante reserva | R-05 y P-10: la franja queda apartada de forma provisional y se confirma al registrarse el pago por adelantado |
 | El visitante no paga dentro del plazo | P-11: la solicitud expira y la franja se libera |
 | Se libera una franja y varios esperan | P-06: se avisa a todos |
+<<<<<<< HEAD
+=======
+| Pide la sala con proyector y el único proyector está en el salón esa tarde | R-08 y P-08: se rechaza por falta de equipo; puede pedir sin proyector o con televisor |
+| Pide dos televisores y queda uno libre | R-08: se rechaza; no se confirma una parte del pedido |
+| Se va una hora antes | H-13 y P-12: se libera esa hora, se avisa a la lista de espera y la reserva se cobra completa |
+| Quieren entrar diez personas en la sala de 8 | H-15 y R-04: no se acepta; pueden pedir la sala de 16 |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | Una reserva indica más asistentes que el aforo | R-04 y P-08: se rechaza |
 | Alguien se queda 30 min más y la franja siguiente está libre | R-06: sigue usando la sala y se registran horas extra |
 | Alguien se queda más tiempo y hay otra reserva después | R-06: debe desalojar la sala |
@@ -220,5 +271,11 @@ Cada regla del muro se convierte en una invariante candidata que protegerá un a
 | R-04 | Los asistentes de una reserva nunca superan el aforo de la sala | Reserva |
 | R-05 | Ninguna reserva de visitante se confirma sin pago por adelantado; la franja provisional se libera si vence el plazo | Reserva |
 | R-06 | El exceso de tiempo nunca invade una reserva confirmada | Disponibilidad |
+<<<<<<< HEAD
 
 Las políticas P-01 a P-11 no son invariantes: son reacciones a eventos, y entre la causa y el efecto puede pasar un tiempo sin que el sistema quede en un estado inválido.
+=======
+| R-08 | Una unidad de equipo portátil nunca está en dos ocupaciones que se solapan | Disponibilidad |
+
+Las políticas P-01 a P-12 no son invariantes: son reacciones a eventos, y entre la causa y el efecto puede pasar un tiempo sin que el sistema quede en un estado inválido.
+>>>>>>> 736506b707297628417a878d849e4947bc782029

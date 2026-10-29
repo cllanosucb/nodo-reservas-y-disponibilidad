@@ -16,7 +16,11 @@
 | Recuadro amarillo claro con el nombre del contexto | Bounded context: Disponibilidad o Reserva |
 | Píldora naranja | Corazón candidato del aggregate (la raíz que protege las invariantes) |
 | Caja blanca con borde punteado | Invariante candidata (INV-xx) |
+<<<<<<< HEAD
 | Caja lila | Políticas P-01 a P-11: reacciones a eventos, no se garantizan siempre |
+=======
+| Caja lila | Políticas P-01 a P-12: reacciones a eventos, no se garantizan siempre |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | Línea punteada con texto | Evento o relación que cruza entre contextos |
 
 Las reglas R-xx, las políticas P-xx y los hotspots H-xx son los de [03-eventstorming.md](03-eventstorming.md); los términos, los de [02-glosario.md](02-glosario.md).
@@ -38,6 +42,7 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 
 ## 2. Invariantes de Disponibilidad
 
+<<<<<<< HEAD
 **Corazón candidato del aggregate:** la **agenda del recurso** (una sala de reunión), con sus franjas ocupadas y sus bloqueos. Las invariantes se refieren a cómo se relacionan las franjas **de una misma sala** entre sí, así que se verifican juntas y de una sola vez. La agenda garantiza aislamiento transaccional cuando dos solicitudes llegan a la vez.
 
 ### INV-D1 · Nunca dos ocupaciones se solapan en la misma sala
@@ -48,6 +53,18 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 | **Ejemplo del que sale** | La Sala B está reservada el jueves de 10:00 a 11:00. Otra persona pide la Sala B de 10:30 a 11:30 → **no se puede**. |
 | **Origen** | R-01; caso del curso: «solo una debería quedarse con ella». |
 | **Casos límite** | **Concurrencia (H-03, HI-01):** dos personas piden 10:00–11:00 al mismo tiempo → la agenda confirma una sola; la otra se rechaza o entra en la lista de espera. · **Franjas que se tocan:** 10:00–11:00 y 11:00–12:00 no se solapan, pero las impide INV-D2. · **Salas distintas:** la Sala A y la Sala B a la misma hora no chocan. |
+=======
+**Corazón candidato del aggregate:** la **agenda del recurso** (una sala, o una unidad de equipo portátil), con sus franjas ocupadas y sus bloqueos. Las invariantes se refieren a cómo se relacionan las franjas **de un mismo recurso** entre sí, así que se verifican juntas y de una sola vez. La agenda garantiza aislamiento transaccional cuando dos solicitudes llegan a la vez.
+
+### INV-D1 · Nunca dos ocupaciones se solapan en el mismo recurso
+
+| | |
+|---|---|
+| **Enunciado** | En un mismo recurso reservable (una sala o una unidad de equipo portátil), dos franjas ocupadas (por reservas confirmadas, reservas provisionales de visitantes, bloqueos o, en el equipo, eventos del salón) **nunca** comparten ni un minuto. |
+| **Ejemplo del que sale** | La Sala B está reservada el jueves de 10:00 a 11:00. Otra persona pide la Sala B de 10:30 a 11:30 → **no se puede**. |
+| **Origen** | R-01 y R-08; caso del curso: «solo una debería quedarse con ella»; sesión 5: un equipo asignado no se puede sobreasignar. |
+| **Casos límite** | **Concurrencia (H-03, HI-01):** dos personas piden 10:00–11:00 al mismo tiempo → la agenda confirma una sola; la otra se rechaza o entra en la lista de espera. · **Franjas que se tocan:** 10:00–11:00 y 11:00–12:00 no se solapan, pero las impide INV-D2. · **Salas distintas:** la Sala A y la Sala B a la misma hora no chocan. · **Equipo portátil (H-14):** el único proyector, ya asignado de 10:00 a 12:00 en el salón, no se puede asignar de 11:00 a 12:00 a una sala; dos televisores distintos sí pueden usarse a la vez. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **Sí, es la principal.** Es la razón de ser del core. |
 
 ### INV-D2 · Siempre quedan 15 minutos de margen
@@ -57,7 +74,11 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 | **Enunciado** | En una misma sala, entre el fin de una ocupación y el inicio de la siguiente (reserva o bloqueo) pasan **al menos 15 minutos**. |
 | **Ejemplo del que sale** | Reserva de 10:00 a 11:00. Pedir desde las 11:10 → **no**. Pedir desde las 11:15 → **sí**. Bloquear por mantenimiento desde las 11:00 → **no**; desde las 11:15 → **sí**. |
 | **Origen** | R-01; margen obligatorio de 15 min para limpiar y ventilar. |
+<<<<<<< HEAD
 | **Casos límite** | **Exactamente 15 min:** se permite. · **Frente a un bloqueo:** el margen también se aplica. |
+=======
+| **Casos límite** | **Exactamente 15 min:** se permite. · **Frente a un bloqueo:** el margen también se aplica. · **Equipo portátil:** no tiene margen; no se limpia entre usos. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **Sí.** Junto con INV-D1 define cuándo una franja está libre. |
 
 ### INV-D3 · Una franja bloqueada no admite nuevas ocupaciones
@@ -74,10 +95,17 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 
 | | |
 |---|---|
+<<<<<<< HEAD
 | **Enunciado** | Una franja se libera **una sola vez** y solo por un hecho de la reserva que la ocupaba: su cancelación, su reasignación, su reprogramación o la expiración de una solicitud de visitante sin pago. |
 | **Ejemplo del que sale** | Ana cancela su reserva de 15:00 a 16:00 → la franja queda libre. Si la cancelación llega dos veces, la segunda vez **no** se libera nada ni se vuelve a avisar a la lista de espera. |
 | **Origen** | Evento «Franja liberada»; P-07 y P-11. |
 | **Casos límite** | Si un aviso tardío intentara liberar una franja que **ya** volvió a ocupar otra persona, la dejaría vacía por error. Esta invariante lo impide. |
+=======
+| **Enunciado** | Una franja se libera **una sola vez** y solo por un hecho de la reserva que la ocupaba: su cancelación, su reasignación, su reprogramación, la expiración de una solicitud de visitante sin pago o la salida anticipada (en ese caso, solo el tramo que falta). |
+| **Ejemplo del que sale** | Ana cancela su reserva de 15:00 a 16:00 → la franja queda libre. Si la cancelación llega dos veces, la segunda vez **no** se libera nada ni se vuelve a avisar a la lista de espera. |
+| **Origen** | Evento «Franja liberada»; P-07, P-11 y P-12. |
+| **Casos límite** | Si un aviso tardío intentara liberar una franja que **ya** volvió a ocupar otra persona, la dejaría vacía por error. Esta invariante lo impide. · **Salida anticipada (H-13):** la persona sale a las 11:00 de una franja de 10:00 a 12:00 → se libera de 11:00 a 12:00; nunca un tramo ya usado. · **Equipo:** al liberar la reserva se libera también cada unidad de equipo que tenía asignada. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **Sí**, es la contraparte de INV-D1. |
 
 ### INV-D5 · El exceso de tiempo nunca invade una reserva confirmada
@@ -100,10 +128,17 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 
 | | |
 |---|---|
+<<<<<<< HEAD
 | **Enunciado** | No existe una reserva confirmada cuya franja figure como libre, ni una franja ocupada por una reserva que no está confirmada o provisional. |
 | **Ejemplo del que sale** | Ana tiene confirmada la Sala B de 10:00 a 11:00 → en «Salas disponibles» esa franja **no** aparece libre. |
 | **Origen** | P-01 y R-01. |
 | **Casos límite** | **Es la única invariante que cruza los dos contextos.** Se garantiza así: la reserva se confirma solo después de que la agenda ocupó la franja; si la agenda no puede ocuparla, la solicitud se rechaza (P-08) o entra en la lista de espera (P-02). |
+=======
+| **Enunciado** | No existe una reserva confirmada cuya sala, o cuyo equipo pedido, figure como libre en su franja, ni una franja ocupada por una reserva que no está confirmada o provisional. |
+| **Ejemplo del que sale** | Ana tiene confirmada la Sala B de 10:00 a 11:00 → en «Salas disponibles» esa franja **no** aparece libre. |
+| **Origen** | P-01, R-01 y R-08. |
+| **Casos límite** | **Es la única invariante que cruza los dos contextos.** Se garantiza así: la reserva se confirma solo después de que las agendas ocuparon la sala y una unidad de cada equipo pedido; si la sala no se puede ocupar, la solicitud se rechaza (P-08) o entra en la lista de espera (P-02); si la sala sí pero falta equipo, se libera la sala y la solicitud se rechaza (R-08). |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **No dentro de un solo aggregate.** Se cumple con la secuencia «ocupar la franja → confirmar la reserva». |
 
 ### INV-R2 · Una reserva solo pasa por estados válidos
@@ -113,7 +148,11 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 | **Enunciado** | Una reserva sigue uno de estos caminos y ningún otro: **solicitada → confirmada → cancelada**; **solicitada → rechazada**; y, para el visitante, **solicitada → provisional → confirmada** o **provisional → expirada**. Una reserva cancelada, rechazada o expirada no vuelve a ningún estado. Reasignar o reprogramar una reserva la mantiene confirmada, con otra sala o franja; un reembolso la deja cancelada sin cobro. |
 | **Ejemplo del que sale** | Ana cancela a las 9:00. A las 9:05 recepción intenta cancelarla otra vez → no ocurre nada nuevo: ni otra penalización ni otra franja liberada. |
 | **Origen** | Eventos «Reserva solicitada», «Reserva confirmada», «Solicitud rechazada», «Pago por adelantado registrado», «Solicitud expirada», «Reserva cancelada», «Reserva reasignada», «Reserva reprogramada», «Reembolso solicitado». |
+<<<<<<< HEAD
 | **Casos límite** | **Cancelar después del inicio:** no se puede; si el titular no se presenta, se cobra la franja completa. · **Lista de espera:** quien está en espera **no** tiene una reserva; cuando la franja se libera, debe solicitarla. |
+=======
+| **Casos límite** | **Cancelar después del inicio:** no se puede; si el titular no se presenta, se cobra la franja completa. · **Salida anticipada:** no cambia el estado; la reserva sigue confirmada y se cobra completa (H-13). · **Lista de espera:** quien está en espera **no** tiene una reserva; cuando la franja se libera, debe solicitarla. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **Sí, es la principal de Reserva.** |
 
 ### INV-R3 · La confirmación automática exige miembro al día y 24 h o más de anticipación
@@ -143,7 +182,11 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 | **Enunciado** | La cantidad de asistentes de una reserva **nunca** supera el aforo de la sala: no hay sobrecupo. |
 | **Ejemplo del que sale** | Una reserva indica más asistentes de los que admite la sala elegida → **no se acepta**. |
 | **Origen** | R-04; el aforo de cada sala lo entrega Espacios y recursos. |
+<<<<<<< HEAD
 | **Casos límite** | **Reasignación por bloqueo:** la sala equivalente también debe admitir a los asistentes. |
+=======
+| **Casos límite** | **Reasignación por bloqueo:** la sala equivalente también debe admitir a los asistentes. · **Aforo «informativo» (H-15):** el experto contó que a veces una sala de 8 recibe a 10; el enunciado manda evitar el sobrecupo y es parte de la promesa del core, así que el límite es estricto. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **¿Corazón del aggregate?** | **Sí.** La reserva conoce sus asistentes; el aforo es un dato del catálogo. |
 
 ### INV-R6 · Ninguna reserva de visitante se confirma sin pago por adelantado
@@ -194,7 +237,11 @@ Las políticas **no** son invariantes: entre la causa y el efecto puede pasar un
 
 | ID | Política | Evento que la dispara | Resultado | Contexto que decide | ¿Cruza la frontera? |
 |---|---|---|---|---|---|
+<<<<<<< HEAD
 | P-01 | Cuando se solicita una reserva → confirmarla si cumple INV-D1 a D3 e INV-R3 a R5 | Reserva solicitada | Reserva confirmada | Reserva (consulta a Disponibilidad y a Membresías y planes) | Sí: ① y ⑤ |
+=======
+| P-01 | Cuando se solicita una reserva → confirmarla si cumple INV-D1 a D3 (sala y equipo) e INV-R3 a R5 | Reserva solicitada | Reserva confirmada | Reserva (consulta a Disponibilidad y a Membresías y planes) | Sí: ① y ⑤ |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | P-02 | Cuando la franja está ocupada → añadir a la lista de espera | Reserva solicitada | Añadido a la lista de espera | Reserva | No |
 | P-03 | Cuando falta un día para la reserva → recordar | Confirmación enviada | Recordatorio enviado | Notificaciones (programa y anula el recordatorio) | Sí: ⑦ |
 | P-04 | Cuando se superan las horas incluidas → registrar horas extra para el cobro a fin de mes | Reserva confirmada | Horas extra registradas | Reserva (con las horas que lleva Membresías y planes) | Sí: ⑤ y ⑥ |
@@ -205,6 +252,10 @@ Las políticas **no** son invariantes: entre la causa y el efecto puede pasar un
 | P-09 | Cuando se bloquea una franja con reserva confirmada → resolver la reserva afectada | Sala bloqueada | Reserva reasignada / reprogramada / Reembolso solicitado | Reserva (recepción u operaciones) | Sí: ① y ⑥ |
 | P-10 | Cuando se registra el pago por adelantado de un visitante → confirmar su reserva | Pago por adelantado registrado | Reserva confirmada | Reserva | Sí: ⑥ |
 | P-11 | Cuando vence el plazo de pago de un visitante sin pago → expirar la solicitud y liberar la franja | Plazo de pago vencido | Solicitud expirada → Franja liberada | Reserva y Disponibilidad | Sí: ① |
+<<<<<<< HEAD
+=======
+| P-12 | Cuando recepción registra una salida anticipada → liberar el tramo que falta | Salida anticipada (comando de recepción) | Franja liberada → P-06 | Disponibilidad | Sí: ① |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Por qué P-05 se parte en dos:** **decidir que hay penalización** es una invariante de la reserva (INV-R7: siempre se cumple), mientras que **cobrarla** es una política de Facturación y cobros, que calcula el monto y puede ocurrir a fin de mes.
 
@@ -228,6 +279,13 @@ Cada regla de este listado tiene respuesta del experto y quedó incorporada a un
 | Plan que vence después de confirmar | La reserva se mantiene; Control de acceso físico valida el día de la reserva. | INV-R3 |
 | Margen frente a un bloqueo | Se aplica siempre. | INV-D2 |
 | Reembolso de una reserva afectada | La reserva queda cancelada sin cobro. | INV-R2 |
+<<<<<<< HEAD
+=======
+| Equipo portátil pedido con la sala | Se asigna una unidad libre por franja; nunca dos veces a la vez, tampoco con el salón. Si no hay, se rechaza la solicitud. | INV-D1, INV-R1, R-08 |
+| Salida anticipada | Recepción la registra; se libera el tramo que falta y se avisa a la lista de espera; se cobra la franja completa. | INV-D4, P-12 |
+| Aforo estricto o informativo | Estricto: no hay sobrecupo (enunciado y promesa del core). | INV-R5, H-15 |
+| Porcentaje de penalización (10–20 % o franja completa) | Franja completa (enunciado y entrevista escrita); el 10–20 % es la práctica manual de hoy. | INV-R7, H-08 |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -252,6 +310,11 @@ Cada regla de este listado tiene respuesta del experto y quedó incorporada a un
 | Recepción reserva para el invitado de Pedro | R-03 | INV-R8 | Reserva |
 | Ana pide dos veces una franja ocupada | P-02 | INV-R9 | Reserva (lista de espera) |
 | Se libera una franja y tres personas esperan | P-06 | P-06 | Reserva → Notificaciones |
+<<<<<<< HEAD
+=======
+| El único proyector ya está asignado en esa franja | R-08 | INV-D1 (equipo) + P-08 | Disponibilidad |
+| La persona se va una hora antes | H-13 | INV-D4 + P-12 + P-06 | Disponibilidad → Reserva |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -261,7 +324,11 @@ El detalle de cada aggregate (entidades, value objects, comandos y eventos) est�
 
 | Aggregate | Contexto | Invariantes que protege | Por qué juntas |
 |---|---|---|---|
+<<<<<<< HEAD
 | **Agenda del recurso** (una sala en un día, con sus ocupaciones y bloqueos) | Disponibilidad | INV-D1, D2, D3, D4, D5 | Para decidir si una franja nueva cabe hay que mirar **todas** las demás franjas de la misma sala a la vez. |
+=======
+| **Agenda del recurso** (una sala o una unidad de equipo portátil en un día, con sus ocupaciones y bloqueos) | Disponibilidad | INV-D1, D2, D3, D4, D5 | Para decidir si una franja nueva cabe hay que mirar **todas** las demás franjas del mismo recurso a la vez. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Reserva** | Reserva | INV-R2, R3, R4, R5, R6, R7, R8 | Dependen de datos de la propia reserva: estado, hora de inicio, titular, asistentes, quién la registró y plazo de pago. |
 | **Lista de espera** (por sala y franja) | Reserva | INV-R9 | Cambia por motivos distintos a la reserva y no debe bloquearla. |
 | *(entre contextos)* | Disponibilidad ↔ Reserva | INV-R1 | Se cumple con la secuencia «ocupar la franja → confirmar la reserva». |

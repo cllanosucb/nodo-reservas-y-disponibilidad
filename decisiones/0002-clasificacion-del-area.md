@@ -25,11 +25,19 @@ Las dudas principales eran dos: si el core es Reservas y disponibilidad o Membre
 - La mayor inversión de diseño y desarrollo va a Reservas y disponibilidad, que se divide en los bounded contexts Disponibilidad y Reserva (ver [0001-por-que-esta-frontera.md](0001-por-que-esta-frontera.md)).
 - Los subdominios supporting se construyen de forma simple y entregan a nuestra área solo los datos que necesita.
 - Los genéricos se integran con servicios externos.
+<<<<<<< HEAD
 - El área cubre las salas de reunión, que se reservan por franja. Los escritorios quedan fuera porque no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. El salón también queda fuera: pertenece a Agenda de eventos.
+=======
+- El área cubre las salas que se reservan por franja (dos salas de reunión y la sala de capacitación) y el equipo portátil que se pide con ellas (un proyector y tres televisores). Los escritorios quedan fuera porque no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. El salón también queda fuera: pertenece a Agenda de eventos.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ## Hotspots resueltos
 
 | Pregunta | Respuesta |
 |---|---|
 | **Escritorio fijo:** se nombra como «recurso reservable» y, a la vez, como «asignado a un miembro». ¿Se asigna o también se reserva por franja? | Se asigna a una persona o equipo y no se reserva. Queda fuera del área. |
+<<<<<<< HEAD
+=======
+| **Equipo portátil:** el proyector y los televisores se piden con la sala y se comparten con el salón. ¿Es de nuestra área? | Sí: decidir si una unidad está libre en una franja y asignarla es la misma promesa del core (sin solapes). Qué equipos existen es de Espacios y recursos y cuánto cuestan, de Tarifas y precios. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Segunda sede:** si Nodo abre otra sede, ¿la disponibilidad se consulta por sede o para todas a la vez? | Cada sala pertenece a una sede; quien reserva elige la sede o ve las salas de todas. |

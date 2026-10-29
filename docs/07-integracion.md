@@ -1,7 +1,11 @@
 # 07 · Integración: patrones, dirección, qué cruza y mecanismo
 
 > **Proyecto:** Nodo (coworking y eventos) · **Área:** Reservas y disponibilidad (core)
+<<<<<<< HEAD
 > **Alcance:** cómo se integra nuestra área con cada vecino del [context map](05-context-map.md). Se usa **el mismo mapa** (mismas cajas, posiciones y líneas ①–⑨) en cuatro capas; cada capa agrega una sola pregunta.
+=======
+> **Alcance:** cómo se integra nuestra área con cada vecino del [context map](05-context-map.md). Se usa **el mismo mapa** (mismas cajas, posiciones y líneas ①–⑩) en cuatro capas; cada capa agrega una sola pregunta.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -32,8 +36,14 @@ Las formas son las del [context map](05-context-map.md#vista-general-del-mapa): 
 | ⑥ | Facturación y cobros → Reserva | **ACL** | No: es software externo | Facturación y cobros |
 | ⑦ ⑧ | Notificaciones → Reserva | **OHS + Conformist** | No: un mismo contrato para todas las áreas | Notificaciones |
 | ⑨ | Control de acceso físico → Reserva | **OHS + ACL** | No: es una solución externa | Control de acceso físico |
+<<<<<<< HEAD
 
 **Separate Ways:** Reservas y disponibilidad ↔ Agenda de eventos. El salón es un recurso aparte y se alquila por horas o jornadas; las dos áreas no se integran. Las demás relaciones sin línea (Disponibilidad con Membresías y planes, Facturación y cobros o Notificaciones) pasan por Reserva ([context map, sección 5](05-context-map.md#5-lo-que-no-tiene-línea-y-por-qué)).
+=======
+| ⑩ | Disponibilidad → Agenda de eventos | **Customer/Supplier** | Sí: se negocia cómo pide equipo Agenda de eventos | Disponibilidad (agenda del equipo portátil) |
+
+**Separate Ways:** Reservas y disponibilidad ↔ Agenda de eventos **por los espacios**. El salón es un recurso aparte y se alquila por horas o jornadas; salas y salón no se integran. Lo único compartido es el equipo portátil, y eso va por la línea ⑩. Las demás relaciones sin línea (Disponibilidad con Membresías y planes, Facturación y cobros o Notificaciones) pasan por Reserva ([context map, sección 5](05-context-map.md#5-lo-que-no-tiene-línea-y-por-qué)).
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Por qué ACL en ②–⑤:** sus modelos cambian por motivos propios (salas nuevas, planes nuevos, tarifas por temporada) y no queremos que eso nos obligue a cambiar nuestras reglas ([context map, «Dónde protegerse»](05-context-map.md#7-hotspots-de-integración-resueltos)).
 
@@ -53,8 +63,14 @@ Las formas son las del [context map](05-context-map.md#vista-general-del-mapa): 
 | ⑥ | Facturación y cobros | Reserva |
 | ⑦ ⑧ | Notificaciones | Reserva |
 | ⑨ | Control de acceso físico | Reserva |
+<<<<<<< HEAD
 
 **Regla:** manda el de aguas arriba; define el contrato y el de aguas abajo se adapta. En ⑥, ⑦⑧ y ⑨ los datos también salen de Reserva, pero manda el vecino porque es un servicio externo o transversal.
+=======
+| ⑩ | Disponibilidad | Agenda de eventos |
+
+**Regla:** manda el de aguas arriba; define el contrato y el de aguas abajo se adapta. En ⑥, ⑦⑧ y ⑨ los datos también salen de Reserva, pero manda el vecino porque es un servicio externo o transversal. En ⑩ mandamos nosotros: Disponibilidad es dueña de la agenda del equipo y Agenda de eventos se adapta a su contrato.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -65,13 +81,21 @@ Las formas son las del [context map](05-context-map.md#vista-general-del-mapa): 
 | # | Entra a nuestra área | Sale de nuestra área |
 |---|---|---|
 | ① | Disponibilidad → Reserva: **Franja liberada**, **Sala bloqueada** | Reserva → Disponibilidad: ocupar o liberar la franja |
+<<<<<<< HEAD
 | ② | Salas de reunión reservables (alta y baja) | — |
+=======
+| ② | Salas reservables y unidades de equipo portátil (alta y baja) | — |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | ③ | Aforo de cada sala | — |
 | ④ | Precio vigente de la franja · reserva mensual cotizada | — |
 | ⑤ | Miembro al día · horas incluidas | Horas consumidas (reserva confirmada o cancelada) |
 | ⑥ | **Pago por adelantado registrado** | **Penalización aplicada**, **Horas extra registradas**, **Reembolso solicitado** |
 | ⑦ ⑧ | — | ⑦ Confirmación, recordatorio y **Solicitud rechazada** · ⑧ aviso a toda la lista de espera |
 | ⑨ | Quién actúa y su rol | Reservas del día (permiso de ingreso) |
+<<<<<<< HEAD
+=======
+| ⑩ | Pedido de ocupar o liberar una unidad de equipo para un evento | Equipo asignado o no disponible |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Los nombres de los eventos son los de [03-eventstorming.md](03-eventstorming.md). El detalle de cada línea está en el [context map](05-context-map.md#3-qué-cruza-cada-relación).
 
@@ -91,6 +115,23 @@ Los nombres de los eventos son los de [03-eventstorming.md](03-eventstorming.md)
 | ⑥ | API externa + ACL | Software de facturación y pasarela de pago de terceros. |
 | ⑦ ⑧ | Cola de mensajes (async) | Si Notificaciones no está disponible, la reserva igual se confirma; el aviso sale después. |
 | ⑨ | Token con rol + ACL · API externa + ACL | El rol llega en el token; las reservas del día se envían a la solución de la cerradura. |
+<<<<<<< HEAD
+=======
+| ⑩ | API REST (la publica Disponibilidad) | Agenda de eventos necesita saber en el momento si consiguió el equipo para confirmar su evento. Tiene un solo consumidor: no se justifica un OHS. |
+
+### Por qué algunas líneas combinan dos patrones o dos mecanismos
+
+Cada combinación responde a un lado distinto de la relación o a un sentido distinto del flujo; no son dos alternativas para lo mismo (observación de la sesión 4: «se pueden combinar, pero hay que justificarlo»).
+
+| Línea | Combinación | Justificación |
+|---|---|---|
+| ②–⑤ | **Customer/Supplier + ACL** | Customer/Supplier describe la relación **entre los equipos**: el vecino atiende lo que le pedimos y avisa sus cambios. El ACL es lo que hacemos **de nuestro lado** para que su modelo no entre al nuestro. |
+| ⑦⑧ | **OHS + Conformist** | El OHS es el lado de Notificaciones (un contrato publicado para todos); Conformist es el nuestro (lo usamos tal cual, sin traducir). |
+| ⑨ | **OHS + ACL** | El OHS es el lado de Control de acceso físico (un token igual para todas las áreas); el ACL es el nuestro, porque su vocabulario (*receptionist*, *zone*, *act_as*) sí choca con el de Reserva. |
+| ① | **Llamada en proceso + eventos de dominio en proceso** | Ocupar la franja necesita una respuesta **inmediata** para poder confirmar (INV-R1): es una llamada. Liberar la franja y avisar a la lista de espera son **reacciones** a algo que ya pasó: son eventos. |
+| ② y ③ | **Mensajería async** (②) y **API REST** (③) con el mismo vecino | Responden a momentos distintos. El catálogo cambia pocas veces y avisa cuando cambia (②). El aforo se necesita en el instante de registrar la solicitud (③). |
+| ⑨ | **Token con rol** y **API externa** | Son los dos sentidos de la línea: el token **entra** con cada operación; los permisos de ingreso **salen** hacia la cerradura. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -121,6 +162,7 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 
 ![Lámina A · ACL de Espacios y recursos](img/07-lamina-a-acl-espacios.png)
 
+<<<<<<< HEAD
 **Para qué sirve:** Espacios y recursos mantiene el catálogo completo de Nodo (escritorios, salas y salón). A nuestra área solo le interesan las salas de reunión: Disponibilidad necesita saber cuáles se pueden reservar y Reserva necesita su aforo. El ACL filtra lo que no es nuestro y entrega cada dato al contexto que lo usa.
 
 **Cuándo actúa:** cuando el catálogo avisa que una sala se creó, cambió o se dio de baja (mensajería async), y cuando Reserva consulta el aforo al registrar una solicitud (API REST).
@@ -130,6 +172,17 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 | Adaptador | Escucha los eventos del catálogo (sala creada, cambiada o dada de baja) y consulta el aforo de una sala. |
 | Traductor | Convierte el tipo y el estado en salas de reunión reservables para Disponibilidad, y la capacidad en aforo para Reserva. |
 | Fachada | `SalasReservables::obtener(salaId)` para Disponibilidad y `AforoDeSala::consultar(salaId)` para Reserva. |
+=======
+**Para qué sirve:** Espacios y recursos mantiene el catálogo completo de Nodo (escritorios, salas y salón). A nuestra área solo le interesan las salas que se reservan por franja (las de reunión y la de capacitación) y las unidades de equipo portátil: Disponibilidad necesita saber cuáles se pueden reservar y Reserva necesita el aforo de cada sala. El ACL filtra lo que no es nuestro y entrega cada dato al contexto que lo usa.
+
+**Cuándo actúa:** cuando el catálogo avisa que una sala o una unidad de equipo se creó, cambió o se dio de baja (mensajería async), y cuando Reserva consulta el aforo al registrar una solicitud (API REST).
+
+| Pieza | Qué hace |
+|---|---|
+| Adaptador | Escucha los eventos del catálogo (sala o equipo creado, cambiado o dado de baja) y consulta el aforo de una sala. |
+| Traductor | Convierte el tipo y el estado en salas reservables y unidades de equipo portátil para Disponibilidad, y la capacidad en aforo para Reserva. |
+| Fachada | `SalasReservables::obtener(salaId)` y `EquipoPortatil::unidades(tipo)` para Disponibilidad, y `AforoDeSala::consultar(salaId)` para Reserva. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 | Espacios y recursos dice | Disponibilidad y Reserva reciben |
 |---|---|
@@ -137,6 +190,12 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 | `"tipo": "SALA_REUNION", "estado": "ACTIVA"` | Disponibilidad: sala de reunión reservable |
 | `"capacidad": 8` | Reserva: aforo de la sala = 8 |
 | `"estado": "BAJA"` | Como un bloqueo: la reserva afectada se reasigna, se reprograma o se reembolsa (HI-04) |
+<<<<<<< HEAD
+=======
+| `"tipo": "SALA_CAPACITACION", "capacidad": 40` | Disponibilidad: sala reservable · Reserva: aforo = 40 |
+| `"tipo": "EQUIPO_PORTATIL", "subtipo": "PROYECTOR", "unidades": 1` | Disponibilidad: una unidad reservable, *Proyector 1*, con su propia agenda |
+| `"equipamiento": ["TV"]` en una sala | Equipo de la sala: solo informativo en «Salas disponibles» |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Costo y cuándo:** vale porque el catálogo cambia por motivos propios (salas nuevas, tipos de recurso nuevos). Sin ACL, Disponibilidad y Reserva tendrían que saber qué es un escritorio fijo o un salón.
 
@@ -144,7 +203,11 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 
 ![Lámina B · ACL de Tarifas y precios](img/07-lamina-b-acl-tarifas.png)
 
+<<<<<<< HEAD
 **Para qué sirve:** Tarifas y precios maneja la lista de precios de Nodo. Reserva no necesita la lista: solo el precio de **su** franja en el momento de confirmar, que conserva aunque la tarifa cambie después. También recibe la cotización de una reserva mensual cuando el cliente la acepta.
+=======
+**Para qué sirve:** Tarifas y precios maneja la lista de precios de Nodo. Reserva no necesita la lista: solo el precio de **su** franja (sala y equipo pedido) en el momento de confirmar, que conserva aunque la tarifa cambie después. También recibe la cotización de una reserva mensual cuando el cliente la acepta.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Cuándo actúa:** al confirmar una reserva (precio vigente) y al aceptar una cotización mensual (API REST).
 
@@ -152,7 +215,11 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 |---|---|
 | Adaptador | Llama a la API de Tarifas y precios para el precio vigente de la franja y la cotización de una reserva mensual. |
 | Traductor | Convierte la tarifa en el precio que conserva la reserva confirmada, y la cotización aceptada en una reserva mensual por confirmar. |
+<<<<<<< HEAD
 | Fachada | `PrecioDeFranja::vigente(salaId, franja)` y `ReservaMensual::cotizacion(cotizacionId)`. |
+=======
+| Fachada | `PrecioDeFranja::vigente(salaId, franja, equipoPedido)` y `ReservaMensual::cotizacion(cotizacionId)`. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 | Tarifas y precios dice | Reserva recibe |
 |---|---|
@@ -160,6 +227,10 @@ Cada ACL u OHS tiene su lámina en Miro. Cada lámina muestra arriba las tres pi
 | `"rate_id": "T-08"` (tarifa nueva) | No afecta a las reservas confirmadas: conservan su precio |
 | `"quote_status": "ACCEPTED"` | Reserva mensual cotizada: cada fecha cumple las reglas de una reserva normal (HI-09) |
 | `"quote_status": "EXPIRED"` | Cotización vencida (4 días): no aparta la franja (HI-08) |
+<<<<<<< HEAD
+=======
+| `"rate_id": "T-20", "item": "PROYECTOR"` | Precio del equipo pedido en esa franja: se suma al precio conservado de la reserva |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Costo y cuándo:** vale porque las tarifas cambian por motivos propios (la dirección las cambia y hay tarifas por temporada). Sin ACL, Reserva tendría que entender la lista de precios en lugar de conservar solo el precio de su franja.
 
@@ -273,4 +344,8 @@ La justificación completa está en [decisiones/0003-patrones-de-integracion.md]
 | ⑥ Facturación y cobros | ACL frente al externo. |
 | ⑦⑧ Notificaciones | OHS + Conformist por cola de mensajes; Reserva pide programar y anular el recordatorio. |
 | ⑨ Control de acceso físico | OHS + ACL: entra el rol, salen las reservas del día. |
+<<<<<<< HEAD
 | Agenda de eventos | Separate Ways. |
+=======
+| Agenda de eventos | Separate Ways por los espacios; Customer/Supplier (⑩) por el equipo portátil compartido, con Disponibilidad aguas arriba. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029

@@ -20,7 +20,11 @@
 
 **Nodo** es un espacio de coworking en una ciudad mediana. Ocupa dos plantas: una sala diáfana con escritorios (flexibles y fijos), varias salas de reunión cerradas de distintos tamaños y un salón grande para charlas y eventos. Vive de tres fuentes de ingreso: las membresías, el alquiler puntual de salas por horas y el alquiler del salón para eventos.
 
+<<<<<<< HEAD
 **Nuestra área, Reservas y disponibilidad,** decide qué sala de reunión está libre y quién se queda con ella. Es el **subdominio core**:
+=======
+**Nuestra área, Reservas y disponibilidad,** decide qué sala está libre y quién se queda con ella, y asigna el equipo portátil (proyector, televisores) que se pide junto con la sala. Es el **subdominio core**:
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 > Los clientes eligen Nodo porque **siempre encuentran un espacio disponible y reservarlo es rápido, sin solapes, sin sobrecupo y sin sorpresas**.
 
@@ -40,7 +44,11 @@ El área se divide en **dos bounded contexts**, los dos core:
 
 | Bounded context | Qué modela | Pregunta que responde |
 |---|---|---|
+<<<<<<< HEAD
 | **Disponibilidad** | Franjas libres de cada sala de reunión, margen de 15 min y bloqueos por mantenimiento o limpieza | «¿Está libre la Sala B el jueves de 10:00 a 11:00?» |
+=======
+| **Disponibilidad** | Franjas libres de cada sala y de cada unidad de equipo portátil, margen de 15 min en las salas y bloqueos por mantenimiento o limpieza | «¿Está libre la Sala B el jueves de 10:00 a 11:00, y hay un proyector libre?» |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Reserva** | El ciclo de vida de lo que pide una persona (miembro o visitante): solicitud, confirmación o rechazo, reserva asistida, cancelación, penalización, horas extra y lista de espera | «¿Puede Ana quedarse con esa franja, y qué pasa si cancela?» |
 
 **Señales que justifican la frontera:**
@@ -58,8 +66,13 @@ Detalle: [decisiones/0001-por-que-esta-frontera.md](decisiones/0001-por-que-esta
 
 | Contexto | Términos principales |
 |---|---|
+<<<<<<< HEAD
 | **Disponibilidad** | Sala de reunión, Recurso reservable, Franja, Margen, Bloqueo, Disponibilidad |
 | **Reserva** | Solicitud de reserva, Reserva, Confirmada, Anticipación, Reserva asistida, Miembro al día, Visitante, Invitado, Aforo, Cancelación, Cancelación tardía, Penalización, Horas extra, Lista de espera |
+=======
+| **Disponibilidad** | Sala de reunión, Recurso reservable, Equipo portátil, Franja, Margen, Bloqueo, Ocupación, Disponibilidad |
+| **Reserva** | Solicitud de reserva, Reserva, Confirmada, Reserva provisional, Plazo de pago, Equipo pedido, Anticipación, Reserva asistida, Miembro al día, Visitante, Invitado, Aforo, Cancelación, Cancelación tardía, Penalización, Horas extra, Salida anticipada, Reserva afectada, Lista de espera |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 **Polisemias principales:**
 
@@ -87,8 +100,14 @@ Detalle: [docs/02-glosario.md](docs/02-glosario.md)
 | ⑥ | Facturación y cobros → Reserva | Pago por adelantado · penalización · horas extra · reembolso | ACL | API externa |
 | ⑦ ⑧ | Notificaciones → Reserva | Confirmación, recordatorio y rechazo · aviso a la lista de espera | OHS + Conformist | Cola de mensajes |
 | ⑨ | Control de acceso físico → Reserva | Quién actúa y su rol · reservas del día | OHS + ACL | Token con rol · API externa |
+<<<<<<< HEAD
 
 La flecha va del contexto de aguas arriba (define el contrato) al de aguas abajo. Con **Agenda de eventos** no hay integración (Separate Ways): el salón es un recurso aparte.
+=======
+| ⑩ | Disponibilidad → Agenda de eventos | Equipo portátil compartido con el salón | Customer/Supplier | API REST |
+
+La flecha va del contexto de aguas arriba (define el contrato) al de aguas abajo. Con **Agenda de eventos** no hay integración por los espacios (Separate Ways): el salón es un recurso aparte; solo se comparte el equipo portátil (⑩). Cuando una línea combina dos patrones o dos mecanismos, cada uno responde a un lado o a un sentido distinto de la relación ([justificación](docs/07-integracion.md#por-qué-algunas-líneas-combinan-dos-patrones-o-dos-mecanismos)).
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Detalle: [docs/05-context-map.md](docs/05-context-map.md) · Integración (cuatro capas y detalle de cada ACL): [docs/07-integracion.md](docs/07-integracion.md) · Decisión: [decisiones/0003-patrones-de-integracion.md](decisiones/0003-patrones-de-integracion.md)
 
@@ -96,17 +115,30 @@ Detalle: [docs/05-context-map.md](docs/05-context-map.md) · Integración (cuatr
 
 ## 5. Reglas e invariantes
 
+<<<<<<< HEAD
 **Disponibilidad** (aggregate: *Agenda del recurso*, una por sala y día)
 
 - **INV-D1** · Nunca dos ocupaciones se solapan en la misma sala.
 - **INV-D2** · Siempre quedan 15 minutos de margen, también frente a un bloqueo.
 - **INV-D3** · Una franja bloqueada no admite nuevas ocupaciones.
 - **INV-D4** · Solo se libera una franja ocupada, y una sola vez.
+=======
+**Disponibilidad** (aggregate: *Agenda del recurso*, una por recurso y día)
+
+- **INV-D1** · Nunca dos ocupaciones se solapan en el mismo recurso (una sala o una unidad de equipo portátil).
+- **INV-D2** · Siempre quedan 15 minutos de margen, también frente a un bloqueo.
+- **INV-D3** · Una franja bloqueada no admite nuevas ocupaciones.
+- **INV-D4** · Solo se libera una franja ocupada, y una sola vez (en una salida anticipada, solo el tramo que falta).
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 - **INV-D5** · El exceso de tiempo nunca invade una reserva confirmada.
 
 **Reserva** (aggregates: *Reserva* y *Lista de espera*)
 
+<<<<<<< HEAD
 - **INV-R1** · Toda reserva confirmada tiene su franja ocupada en Disponibilidad (cruza contextos).
+=======
+- **INV-R1** · Toda reserva confirmada tiene ocupadas en Disponibilidad su sala y el equipo pedido (cruza contextos).
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 - **INV-R2** · Una reserva solo pasa por estados válidos.
 - **INV-R3** · La confirmación automática exige miembro al día y 24 h o más de anticipación.
 - **INV-R4** · Ninguna reserva se registra con menos de 3 h de anticipación.
@@ -116,7 +148,11 @@ Detalle: [docs/05-context-map.md](docs/05-context-map.md) · Integración (cuatr
 - **INV-R8** · Toda reserva asistida registra quién la hizo y a nombre de quién.
 - **INV-R9** · Una persona no está dos veces en la lista de espera de la misma franja.
 
+<<<<<<< HEAD
 Las **políticas** P-01 a P-11 («cuando… entonces…») reaccionan a eventos y no son invariantes.
+=======
+Las **políticas** P-01 a P-12 («cuando… entonces…») reaccionan a eventos y no son invariantes.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Detalle: [docs/06-reglas-invariantes.md](docs/06-reglas-invariantes.md) · Origen de las reglas: [docs/03-eventstorming.md](docs/03-eventstorming.md) y [docs/04-domain-stories.md](docs/04-domain-stories.md)
 
@@ -128,12 +164,21 @@ Cada invariante queda protegida por un aggregate. **Franja** (inicio, fin) es el
 
 | Aggregate | Contexto | Raíz e identidad | Invariantes | Domain events principales |
 |---|---|---|---|---|
+<<<<<<< HEAD
 | **Agenda del recurso** | Disponibilidad | `AgendaDelRecurso`: una sala en un día (salaId + fecha), con sus ocupaciones y bloqueos | INV-D1 a INV-D5 | Sala bloqueada · Franja liberada |
+=======
+| **Agenda del recurso** | Disponibilidad | `AgendaDelRecurso`: un recurso (sala o unidad de equipo) en un día (recursoId + fecha), con sus ocupaciones y bloqueos | INV-D1 a INV-D5 | Sala bloqueada · Franja liberada |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Reserva** | Reserva | `Reserva` (reservaId), con su estado, franja, titular, asistentes y precio conservado | INV-R2 a INV-R8 | Reserva solicitada · Reserva confirmada · Solicitud rechazada · Solicitud expirada · Reserva cancelada · Penalización aplicada |
 | **Lista de espera** | Reserva | `ListaDeEspera`: una por sala y franja | INV-R9 | Añadido a la lista de espera · Lista de espera notificada |
 
 **El último cupo:** la agenda tiene versión. Si dos solicitudes compiten por la misma sala el mismo día, una gana; la otra reintenta, encuentra la franja ocupada y se rechaza o entra en la lista de espera.
 
+<<<<<<< HEAD
+=======
+Cada domain event sale de una nota del EventStorming con el mismo nombre: la tabla de trazabilidad está en [docs/08-modelo.md](docs/08-modelo.md#7-trazabilidad-con-el-eventstorming-de-la-nota-naranja-al-aggregate).
+
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 Detalle: [docs/08-modelo.md](docs/08-modelo.md)
 
 ---
@@ -147,7 +192,11 @@ Detalle: [docs/08-modelo.md](docs/08-modelo.md)
 | **Factories** | Sin clases factory: `Reserva.solicitar(...)`, `AgendaDelRecurso.abrir(...)` y `ListaDeEspera.abrir(...)`. |
 | **Application services** | Coordinan, no deciden. Caso principal: **SolicitarReserva**. |
 
+<<<<<<< HEAD
 **Reservar una sala, en cinco pasos:** (1) la reserva se solicita y se valida la anticipación; (2) se consultan el aforo y el estado del miembro por sus ACL; (3) la agenda **ocupa la franja**; (4) si quedó ocupada, la reserva se confirma con el precio vigente (o queda provisional si es un visitante); (5) si no, la solicitud se rechaza y la persona entra en la lista de espera. Cada aggregate se guarda en su propia transacción.
+=======
+**Reservar una sala, en cinco pasos:** (1) la reserva se solicita y se valida la anticipación; (2) se consultan el aforo y el estado del miembro por sus ACL; (3) la agenda **ocupa la franja** de la sala y, si se pidió equipo, de una unidad libre de cada tipo; (4) si todo quedó ocupado, la reserva se confirma con el precio vigente (o queda provisional si es un visitante); (5) si no, la solicitud se rechaza y la persona entra en la lista de espera. Cada aggregate se guarda en su propia transacción.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Detalle (pseudocódigo y flujos): [docs/09-componentes.md](docs/09-componentes.md)
 

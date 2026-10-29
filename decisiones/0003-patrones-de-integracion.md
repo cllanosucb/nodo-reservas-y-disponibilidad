@@ -3,7 +3,11 @@
 - **Área:** Reservas y disponibilidad (core)
 
 ## Contexto
+<<<<<<< HEAD
 El [context map](../docs/05-context-map.md) dejó claro **qué cruza** cada una de las líneas ①–⑨, pero no **cómo** se relacionan los modelos, quién define el contrato ni con qué mecanismo se integran. Hay que decidirlo antes de modelar los aggregates y los servicios, porque de eso depende qué traduce nuestro código y qué usa tal cual.
+=======
+El [context map](../docs/05-context-map.md) dejó claro **qué cruza** cada una de las líneas ①–⑩, pero no **cómo** se relacionan los modelos, quién define el contrato ni con qué mecanismo se integran. Hay que decidirlo antes de modelar los aggregates y los servicios, porque de eso depende qué traduce nuestro código y qué usa tal cual.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Para cada línea se respondieron dos preguntas: **¿cooperan los equipos?** y **¿quién controla el modelo?**
 
@@ -19,7 +23,12 @@ Para cada línea se respondieron dos preguntas: **¿cooperan los equipos?** y **
 | ⑥ | Facturación y cobros → Reserva | ACL | Facturación y cobros → Reserva | API externa + ACL |
 | ⑦ ⑧ | Notificaciones → Reserva | OHS + Conformist | Notificaciones → Reserva | Cola de mensajes (async) |
 | ⑨ | Control de acceso físico → Reserva | OHS + ACL | Control de acceso físico → Reserva | Token con rol + ACL · API externa + ACL |
+<<<<<<< HEAD
 | — | Reservas y disponibilidad ↔ Agenda de eventos | Separate Ways | — | — |
+=======
+| ⑩ | Disponibilidad → Agenda de eventos (equipo portátil) | Customer/Supplier | Disponibilidad → Agenda de eventos | API REST |
+| — | Reservas y disponibilidad ↔ Agenda de eventos (espacios) | Separate Ways | — | — |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 El detalle de cada capa y de cada ACL está en [docs/07-integracion.md](../docs/07-integracion.md).
 
@@ -30,12 +39,23 @@ El detalle de cada capa y de cada ACL está en [docs/07-integracion.md](../docs/
 - **⑥ y ⑨ ACL frente a un externo.** Facturación y cobros y Control de acceso físico son soluciones de terceros: mandan ellos. Si cambia el proveedor, solo se reemplaza el adaptador.
 - **⑨ OHS + ACL.** Control de acceso físico publica un token igual para todas las áreas (OHS); nuestro ACL lo convierte en quién actúa y con qué rol, y convierte cada reserva confirmada en un permiso de ingreso.
 - **⑦⑧ OHS + Conformist.** Notificaciones ofrece un contrato genérico (destinatario, plantilla, fecha) para todas las áreas, que no choca con nuestro lenguaje. Lo usamos tal cual por cola de mensajes: si Notificaciones no está disponible, la reserva igual se confirma.
+<<<<<<< HEAD
 - **Separate Ways con Agenda de eventos.** El salón es un recurso aparte y «confirmar» significa otra cosa (depósito y aprobación de la dirección u operaciones).
+=======
+- **Separate Ways con Agenda de eventos por los espacios.** El salón es un recurso aparte y «confirmar» significa otra cosa (depósito y aprobación de la dirección u operaciones).
+- **⑩ Customer/Supplier por el equipo portátil.** El proyector y los televisores se usan en las salas y en el salón; una sola agenda evita prometer la misma unidad dos veces (R-08). Esa agenda es de Disponibilidad porque decidir si un recurso está libre en una franja es nuestro core. Agenda de eventos pide el equipo por API REST: necesita la respuesta en el momento para confirmar su evento.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ## Alternativas descartadas
 - **Partnership en ①.** Supone dos equipos que coordinan cada cambio; aquí es un solo equipo y lo que se comparte es un modelo pequeño.
 - **Misma transacción para ocupar la franja y confirmar la reserva.** Modificaría dos aggregates a la vez. Se prefiere un aggregate por transacción, con la agenda de la sala como garante de que no haya solapes.
+<<<<<<< HEAD
 - **OHS de Disponibilidad.** Sin la línea con Agenda de eventos no tiene consumidores fuera del área; con un solo consumidor basta la llamada directa de ①.
+=======
+- **OHS de Disponibilidad.** Fuera del área solo la consume Agenda de eventos, y solo por el equipo (⑩); con un único consumidor basta un Customer/Supplier con una API acordada.
+- **Separate Ways también para el equipo.** Cada área llevaría su propia lista del equipo y el mismo proyector podría prometerse dos veces (sesión 5).
+- **Que Agenda de eventos sea dueña del equipo.** Las salas lo piden mucho más seguido que el salón, y la regla «sin solapes» ya vive en la agenda de Disponibilidad.
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 - **Customer/Supplier sin ACL en ④.** Las tarifas cambian por su cuenta y la reserva debe conservar su precio; sin ACL, Reserva tendría que entender la lista de precios.
 - **Notificaciones escuchando nuestros eventos.** Obligaría a Notificaciones a conocer el lenguaje de cada área. Se prefiere que Reserva use su contrato y le pida programar y anular el recordatorio.
 - **Rechazar la solicitud si Membresías y planes no responde.** Se pasa a recepción como reserva asistida (HI-13).
@@ -54,3 +74,7 @@ El detalle de cada capa y de cada ACL está en [docs/07-integracion.md](../docs/
 | HI-14 | ¿Quién calcula el monto que se cobra? | Facturación y cobros, con el precio conservado que envía Reserva. |
 | HI-17 / HI-18 | ¿Quién programa y anula el recordatorio? | Notificaciones, a pedido de Reserva por cola de mensajes. |
 | HI-20 | ¿Cómo entra el visitante? | Con apertura manual o un código temporal que genera recepción. |
+<<<<<<< HEAD
+=======
+| HI-21 | ¿Quién lleva la agenda del equipo portátil compartido con el salón? | Disponibilidad; Agenda de eventos lo ocupa por ⑩. |
+>>>>>>> 736506b707297628417a878d849e4947bc782029

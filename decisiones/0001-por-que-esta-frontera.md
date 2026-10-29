@@ -11,7 +11,11 @@ Dividimos el área en dos bounded contexts, los dos core:
 
 | Contexto | Responsabilidad | Lenguaje propio |
 |---|---|---|
+<<<<<<< HEAD
 | **Disponibilidad** | Qué franjas de qué sala de reunión están libres: franjas, margen de 15 min y bloqueos por mantenimiento o limpieza. | Sala de reunión, Recurso reservable, Franja, Margen, Bloqueo, Disponibilidad |
+=======
+| **Disponibilidad** | Qué franjas de qué recurso están libres (salas y unidades de equipo portátil): franjas, margen de 15 min en las salas y bloqueos por mantenimiento o limpieza. | Sala de reunión, Recurso reservable, Equipo portátil, Franja, Margen, Bloqueo, Ocupación, Disponibilidad |
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Reserva** | El ciclo de vida de lo que pide una persona (miembro o visitante): solicitud, confirmación o rechazo, reserva asistida, cancelación, penalización, horas extra y lista de espera. | Solicitud de reserva, Reserva, Confirmada, Anticipación, Reserva asistida, Miembro al día, Visitante, Invitado, Aforo, Cancelación, Cancelación tardía, Penalización, Horas extra, Lista de espera |
 
 ## Señales que justifican la frontera
@@ -20,6 +24,21 @@ Dividimos el área en dos bounded contexts, los dos core:
 3. **Actores distintos.** En Disponibilidad bloquean recepción, administración o dirección. En Reserva actúan el miembro, el visitante y recepción (reserva asistida, cancelación y resolución de una reserva afectada por un bloqueo).
 4. **Preguntas distintas.** Disponibilidad responde «¿qué está libre?», que es el modelo de lectura *Salas disponibles*. Reserva responde «¿esta persona puede quedarse con esta franja y bajo qué condiciones?».
 
+<<<<<<< HEAD
+=======
+## Evidencia, herramienta por herramienta
+
+La sesión 3 pidió justificar cada frontera con los cinco elementos, no solo con el glosario. Las cinco señalan la misma frontera:
+
+| Herramienta | Qué muestra | Dónde |
+|---|---|---|
+| **Glosario (polisemia)** | *Bloquear* no es *cancelar*; *liberar* le ocurre a la franja, *cancelar* a la reserva. Cada contexto agrupa sus términos: sala, franja, margen y bloqueo en Disponibilidad; solicitud, anticipación, penalización y lista de espera en Reserva. | [02-glosario.md](../docs/02-glosario.md) |
+| **Reglas de negocio** | Las de Disponibilidad (R-01, R-06, R-07, R-08) cambian por la operación; las de Reserva (R-02 a R-05), por la política comercial. | [06-reglas-invariantes.md](../docs/06-reglas-invariantes.md) |
+| **Actores y responsabilidades** | Bloquean recepción, administración o dirección; reservan el miembro, el visitante y recepción. | [03-eventstorming.md](../docs/03-eventstorming.md), sección 5 |
+| **EventStorming** | La línea *Preparación* es de Disponibilidad y las demás de Reserva; *Franja liberada* y *Sala bloqueada* le ocurren a la agenda, no a la reserva. | [03-eventstorming.md](../docs/03-eventstorming.md), sección 6 |
+| **Domain stories** | En el as-is, la misma recepcionista cuida dos cosas distintas: el calendario (solapes y margen) y la persona (si está al día, el cobro, el aviso). En el to-be, el «sistema de reservas» pregunta por la franja y decide por la persona. | [04-domain-stories.md](../docs/04-domain-stories.md) |
+
+>>>>>>> 736506b707297628417a878d849e4947bc782029
 ## Alternativas descartadas
 - **Un solo contexto.** Mezcla reglas operativas y comerciales en el mismo modelo, y "liberar franja" queda ambiguo (¿bloqueo o cancelación?).
 - **Lista de espera como contexto propio.** No tiene lenguaje ni reglas propias: solo reacciona a *Franja liberada* avisando a todos los que esperan. Vive dentro de Reserva.
