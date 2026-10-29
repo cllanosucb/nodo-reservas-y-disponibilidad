@@ -22,11 +22,7 @@ Vive de tres fuentes de ingreso:
 
 El equipo es pequeño (recepción, un responsable de operaciones y la dirección) y hoy gestiona todo con una hoja de cálculo, un calendario compartido y grupos de WhatsApp. Quieren un sistema que sostenga la operación actual y que pueda crecer cuando abran una segunda sede.
 
-<<<<<<< HEAD
-**Nuestra área, Reservas y disponibilidad,** decide qué espacio está libre y quién se queda con él. Cubre las **salas de reunión**, que se reservan por franja horaria (segunda fuente de ingreso). Quedan fuera los escritorios, que no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. También queda fuera el salón, que pertenece a Agenda de eventos.
-=======
 **Nuestra área, Reservas y disponibilidad,** decide qué espacio está libre y quién se queda con él. Cubre las **salas que se reservan por franja horaria** (segunda fuente de ingreso): hoy, dos salas de reunión (de 8 y 16 personas) y la sala de capacitación (40 personas), según el experto. Cubre también el **equipo portátil** que se pide junto con una sala (proyector, televisores): hay pocas unidades y no se pueden asignar dos veces a la vez. Quedan fuera los escritorios, que no se reservan: el flexible se usa según el plan de membresía y el fijo se asigna a un miembro. También queda fuera el salón, que pertenece a Agenda de eventos.
->>>>>>> 736506b707297628417a878d849e4947bc782029
 
 Las demás áreas la rodean: Espacios y recursos define qué recursos existen, Membresías y planes dice quién puede reservar, Tarifas y precios fija cuánto cuesta, Facturación y cobros cobra y Notificaciones avisa.
 

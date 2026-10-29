@@ -10,12 +10,6 @@
 | Término | Significado acordado | Qué NO es | Regla / invariante | Evento |
 |---|---|---|---|---|
 | **Sala de reunión** | Espacio cerrado que se reserva por franja. Hay salas de distintos tamaños, cada una con su aforo. | No es un escritorio ni el salón de eventos. | Una sola reserva por franja, con 15 min de margen entre reservas. | — |
-<<<<<<< HEAD
-| **Recurso reservable** | Espacio que se reserva por franja, con hora de inicio y de fin. En nuestra área, la sala de reunión. | No incluye los escritorios (flexibles o fijos) ni el salón (pertenece a Agenda de eventos). | Una sola reserva por franja y recurso. | Reserva confirmada |
-| **Escritorio flexible** | Escritorio de la sala diáfana que se usa según el plan de membresía: el miembro se sienta donde haya lugar libre. | No es un recurso reservable: no tiene agenda ni se reserva por franja. No es un escritorio fijo. | Su uso lo define el plan (Membresías y planes). No tiene margen: se limpia una vez al día. | — |
-| **Franja** | Intervalo horario reservable en un recurso reservable. | No es el día completo. | Dos franjas reservadas del mismo recurso no se pisan. | Reserva confirmada / Franja liberada |
-| **Margen** | 15 min obligatorios después de cada reserva de una sala de reunión, para limpiar y ventilar. También se le dice *buffer*; usamos *margen*. | No es tiempo reservable. | Se aplica siempre, de forma automática: entre dos reservas de la misma sala de reunión y entre una reserva y un bloqueo. | — |
-=======
 | **Recurso reservable** | Lo que se reserva por franja, con hora de inicio y de fin: las salas (de reunión y de capacitación) y cada unidad de equipo portátil. | No incluye los escritorios (flexibles o fijos), el salón (pertenece a Agenda de eventos) ni el equipo fijo de una sala. | Una sola ocupación por franja y recurso. | Reserva confirmada |
 | **Equipo portátil** | Unidad de equipo que se mueve entre espacios y se pide junto con una sala: hoy, un proyector y tres televisores. Cada unidad tiene su propia agenda. | No es el equipo fijo de una sala. No es un servicio extra subcontratado (catering), que es de Agenda de eventos. | Una unidad nunca se asigna a dos ocupaciones que se solapan, aunque una sea de la sala y otra del salón. No tiene margen de limpieza. | — (va en *Reserva confirmada*) |
 | **Equipo de la sala** | Equipo instalado en una sala (por ejemplo, el televisor de la sala de reunión). Lo informa Espacios y recursos. | No se reserva aparte: viene con la sala. | Solo se muestra en «Salas disponibles». | — |
@@ -25,7 +19,6 @@
 | **Escritorio flexible** | Escritorio de la sala diáfana que se usa según el plan de membresía: el miembro se sienta donde haya lugar libre. | No es un recurso reservable: no tiene agenda ni se reserva por franja. No es un escritorio fijo. | Su uso lo define el plan (Membresías y planes). No tiene margen: se limpia una vez al día. | — |
 | **Franja** | Intervalo horario reservable en un recurso reservable. | No es el día completo. | Dos franjas reservadas del mismo recurso no se pisan. | Reserva confirmada / Franja liberada |
 | **Margen** | 15 min obligatorios después de cada reserva de una sala, para limpiar y ventilar. También se le dice *buffer*; usamos *margen*. | No es tiempo reservable. No se aplica al equipo portátil, que no se limpia entre usos. | Se aplica siempre, de forma automática: entre dos reservas de la misma sala y entre una reserva y un bloqueo. | — |
->>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Bloqueo** | Franja que Nodo saca de disponibilidad por mantenimiento o limpieza. | No es una reserva: no tiene titular ni cobro. No es una cancelación. | Solo recepción, administración o dirección pueden bloquear, y quien puede bloquear puede retirar el bloqueo (la franja se libera). Si la franja ya tiene una reserva confirmada, la reserva no se elimina sin solución: recepción u operaciones reasigna al titular a una sala equivalente o coordina la reprogramación o el reembolso, según lo que prefiera el titular. | Sala bloqueada / Reserva reasignada / Reserva reprogramada / Reembolso solicitado |
 | **Disponibilidad** | Estado de un recurso reservable en una franja: libre, sin reserva, sin bloqueo y fuera del margen. | No equivale a que el recurso exista: una franja reservada, bloqueada o dentro del margen no está disponible. | Solo se reserva una franja disponible. | — (modelo de lectura «Salas disponibles») |
 
@@ -43,9 +36,6 @@
 | **Miembro al día** | Miembro sin facturas vencidas. | No equivale a *activo*: un miembro con membresía vigente puede deber la última factura. | Solo un miembro al día confirma reservas sin pago previo. Vale el estado al momento de confirmar: si el plan vence después, la reserva se mantiene. | — |
 | **Visitante** | Persona sin membresía que reserva una sala de reunión por su cuenta. | No es un miembro: no tiene plan ni horas incluidas. No es un invitado. | Paga por adelantado dentro de un plazo límite; mientras tanto, la franja queda apartada de forma provisional. Si no paga a tiempo, la solicitud expira y la franja se libera. | Pago por adelantado registrado / Solicitud expirada |
 | **Invitado** | Tercero a nombre del cual un miembro reserva un espacio. | No es un visitante: no reserva ni paga por su cuenta. | Siempre se registra por recepción (reserva asistida). La reserva queda bajo la responsabilidad del miembro e indica el nombre y los datos del invitado. | Reserva confirmada |
-<<<<<<< HEAD
-| **Aforo** | Cantidad máxima de personas que admite un recurso reservable. El dato lo entrega Espacios y recursos. | No es la cantidad de personas que asisten a una reserva. | La cantidad de asistentes de una reserva nunca supera el aforo del recurso: no hay sobrecupo. | — |
-=======
 | **Aforo** | Cantidad máxima de personas que admite un recurso reservable. El dato lo entrega Espacios y recursos. | No es la cantidad de personas que asisten a una reserva. | La cantidad de asistentes de una reserva nunca supera el aforo del recurso: no hay sobrecupo (hotspot 7). | — |
 | **Responsable** | Quién responde por la reserva: el titular y, en una reserva asistida, quién la registró y el invitado. | No es quien paga la factura (eso es *Cliente* en Facturación y cobros). | La reserva asistida siempre guarda titular y quién la registró. | Reserva confirmada |
 | **Precio conservado** | Precio de la franja (sala y equipo pedido) que la reserva guarda al confirmarse. En el modelo, un valor *Dinero*(monto, moneda). | No es la *tarifa* (lista de precios de Tarifas y precios) ni el monto final de la factura. | Si la tarifa cambia después, la reserva conserva su precio. | Reserva confirmada / Penalización aplicada |
@@ -55,16 +45,11 @@
 | **Plazo de pago** | Momento límite para que el visitante pague por adelantado. | No es la anticipación de la reserva. | Si vence sin pago, la solicitud expira y la franja se libera. | Solicitud expirada |
 | **Reserva afectada** | Reserva confirmada cuya franja quedó bajo un bloqueo. | No es una reserva cancelada: sigue confirmada hasta que se resuelve. | Recepción u operaciones la reasigna, la reprograma o la reembolsa. | Reserva reasignada / Reserva reprogramada / Reembolso solicitado |
 | **Salida anticipada** | La persona deja la sala antes del fin de su franja y recepción lo registra. | No es una cancelación: la reserva ya empezó y se cobra completa. | Solo se libera el tramo que falta, y una sola vez; quienes esperaban esa franja reciben el aviso. | Franja liberada |
->>>>>>> 736506b707297628417a878d849e4947bc782029
 | **Cancelación** | Anulación de una reserva, hecha por su titular o por recepción. | No es un bloqueo: el bloqueo actúa sobre una franja, no sobre una reserva. | Sin costo si se cancela con 4 h o más de anticipación; la franja se libera. No se cancela una reserva ya empezada. | Reserva cancelada / Franja liberada |
 | **Cancelación tardía** | Cancelación hecha con menos de 4 h de anticipación. | No es una cancelación sin costo. | Genera una penalización. | Penalización aplicada |
 | **Penalización** | Cobro de la franja completa por una cancelación tardía o por inasistencia. | No es una hora extra ni un depósito. | Se cobra al titular, aunque cancele recepción. La calcula Facturación y cobros. | Penalización aplicada |
 | **Horas extra** | Horas de sala que exceden las incluidas en el plan del miembro, o el tiempo que una persona se queda en la sala después de su franja. | No son una penalización. | Se cobran a fin de mes. Si quien se excede tiene una reserva confirmada después, debe desalojar la sala; si la franja siguiente está libre, se registran como horas extra. | Horas extra registradas |
-<<<<<<< HEAD
-| **Lista de espera** | Personas interesadas en una franja ocupada. | No es una reserva: no garantiza la sala. | Una solicitud sobre una franja ocupada entra automáticamente en la lista. Cuando la franja se libera, se avisa a todas las personas de la lista por WhatsApp o correo. No hay asignación automática por orden de llegada: la franja la toma quien la reserve. | Añadido a la lista de espera / Lista de espera notificada |
-=======
 | **Lista de espera** | Personas interesadas en una franja ocupada. Cada persona en la lista queda *en espera* desde el momento en que se sumó. | No es una reserva: no garantiza la sala. | Una solicitud sobre una franja ocupada entra automáticamente en la lista. Cuando la franja se libera, se avisa a todas las personas de la lista por WhatsApp o correo. No hay asignación automática por orden de llegada: la franja la toma quien la reserve. | Añadido a la lista de espera / Lista de espera notificada |
->>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -107,12 +92,9 @@ Una misma palabra cambia de significado al cruzar la frontera de nuestra área.
 | Se libera una franja y tres personas la esperan | Se avisa a las tres; la franja la toma quien la reserve. | Lista de espera |
 | Un miembro quiere reservar un escritorio flexible para mañana | No se reserva: se sienta donde haya lugar libre, según su plan. | Escritorio flexible |
 | Un miembro quiere reservar una sala para dentro de dos meses | Se puede: no hay anticipación máxima. | Anticipación |
-<<<<<<< HEAD
-=======
 | Pide la sala con un proyector y el único proyector ya está asignado en esa franja (en otra sala o en el salón) | La solicitud se rechaza por falta de equipo; puede pedir la sala sin proyector o con un televisor. | Equipo pedido, Equipo portátil |
 | Termina su reunión 1 h antes y avisa a recepción | Recepción registra la salida anticipada: se libera la hora que falta y se avisa a quienes esperaban; la reserva se cobra completa. | Salida anticipada, Lista de espera |
 | Diez personas quieren usar la sala de 8 | No se acepta: el sistema evita el sobrecupo. Pueden pedir la sala de 16. | Aforo |
->>>>>>> 736506b707297628417a878d849e4947bc782029
 
 ---
 
@@ -124,10 +106,7 @@ Una misma palabra cambia de significado al cruzar la frontera de nuestra área.
 | 2 | ¿Cuál es la anticipación máxima para reservar? | No hay tope máximo. La anticipación ideal es de 24 h y la mínima de 3 h. Las cotizaciones (eventos o reservas mensuales) vencen a los 4 días si no se confirman con pago o depósito. | *Anticipación*: no hay anticipación máxima. |
 | 3 | Cuando se libera una franja, ¿se avisa a todos o por orden de llegada? | Se avisa a todos los de la lista de espera de esa franja. No hay asignación automática por orden de llegada: la franja la toma quien la reserve. | *Lista de espera*: aviso a todos, sin asignación automática. |
 | 4 | ¿Qué pasa si se bloquea una franja que ya tiene una reserva confirmada? | La reserva no se elimina sin solución: recepción u operaciones reasigna al titular a una sala equivalente o coordina la reprogramación o el reembolso, según su preferencia. | *Bloqueo*: se suma la regla de reasignación. |
-<<<<<<< HEAD
-=======
 | 5 | ¿Se puede pedir equipo junto con la sala? | Sí: proyector, televisor o equipo de conferencias (sesión 1). Un equipo asignado ya no está disponible y no se puede sobreasignar; hay un proyector y tres televisores, y se comparten entre salas y salón (sesión 5). | Nuevos términos *Equipo portátil*, *Equipo pedido* y *Equipo de la sala*. |
 | 6 | ¿Qué pasa si alguien se va antes de que termine su franja? | Recepción lo sabe y puede dar la sala a otros; es quien cambia el estado (sesión 2). | Nuevo término *Salida anticipada*. |
 | 7 | ¿El aforo es un límite estricto o un dato informativo? | En la entrevista oral el experto dijo que es más bien informativo (una sala de 8 a veces recibe 10). El enunciado del caso dice que el sistema debe evitar el sobrecupo, y es parte de la promesa del core. Decisión: límite estricto. Cobrar por cantidad de personas (sala de capacitación) es de Tarifas y precios. | *Aforo*: sin sobrecupo. |
 | 8 | ¿Qué salas se reservan por franja? | Dos salas de reunión (8 y 16 personas) y la sala de capacitación (40); el margen de 15 min aplica a salas y oficinas privadas; el salón tiene 1 h y es de Agenda de eventos (sesión 2). | *Recurso reservable*: salas y equipo portátil. |
->>>>>>> 736506b707297628417a878d849e4947bc782029
