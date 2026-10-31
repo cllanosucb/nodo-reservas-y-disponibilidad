@@ -46,7 +46,7 @@ Este documento junta **todas las reglas de negocio del área** que salieron del 
 |---|---|
 | **Enunciado** | En un mismo recurso reservable (una sala o una unidad de equipo portátil), dos franjas ocupadas (por reservas confirmadas, reservas provisionales de visitantes, bloqueos o, en el equipo, eventos del salón) **nunca** comparten ni un minuto. |
 | **Ejemplo del que sale** | La Sala B está reservada el jueves de 10:00 a 11:00. Otra persona pide la Sala B de 10:30 a 11:30 → **no se puede**. |
-| **Origen** | R-01 y R-08; caso del curso: «solo una debería quedarse con ella»; sesión 5: un equipo asignado no se puede sobreasignar. |
+| **Origen** | R-01 y R-08; caso del curso: «solo una debería quedarse con ella»; experto: un equipo asignado no se puede sobreasignar. |
 | **Casos límite** | **Concurrencia (H-03, HI-01):** dos personas piden 10:00–11:00 al mismo tiempo → la agenda confirma una sola; la otra se rechaza o entra en la lista de espera. · **Franjas que se tocan:** 10:00–11:00 y 11:00–12:00 no se solapan, pero las impide INV-D2. · **Salas distintas:** la Sala A y la Sala B a la misma hora no chocan. · **Equipo portátil (H-14):** el único proyector, ya asignado de 10:00 a 12:00 en el salón, no se puede asignar de 11:00 a 12:00 a una sala; dos televisores distintos sí pueden usarse a la vez. |
 | **¿Corazón del aggregate?** | **Sí, es la principal.** Es la razón de ser del core. |
 

@@ -38,7 +38,7 @@ El detalle de cada capa y de cada ACL está en [docs/07-integracion.md](../docs/
 - **Partnership en ①.** Supone dos equipos que coordinan cada cambio; aquí es un solo equipo y lo que se comparte es un modelo pequeño.
 - **Misma transacción para ocupar la franja y confirmar la reserva.** Modificaría dos aggregates a la vez. Se prefiere un aggregate por transacción, con la agenda de la sala como garante de que no haya solapes.
 - **OHS de Disponibilidad.** Fuera del área solo la consume Agenda de eventos, y solo por el equipo (⑩); con un único consumidor basta un Customer/Supplier con una API acordada.
-- **Separate Ways también para el equipo.** Cada área llevaría su propia lista del equipo y el mismo proyector podría prometerse dos veces (sesión 5).
+- **Separate Ways también para el equipo.** Cada área llevaría su propia lista del equipo y el mismo proyector podría prometerse dos veces.
 - **Que Agenda de eventos sea dueña del equipo.** Las salas lo piden mucho más seguido que el salón, y la regla «sin solapes» ya vive en la agenda de Disponibilidad.
 - **Customer/Supplier sin ACL en ④.** Las tarifas cambian por su cuenta y la reserva debe conservar su precio; sin ACL, Reserva tendría que entender la lista de precios.
 - **Notificaciones escuchando nuestros eventos.** Obligaría a Notificaciones a conocer el lenguaje de cada área. Se prefiere que Reserva use su contrato y le pida programar y anular el recordatorio.

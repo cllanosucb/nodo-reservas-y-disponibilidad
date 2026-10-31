@@ -102,7 +102,7 @@ Al miembro no se le exige pago por adelantado: el uso se descuenta de las horas 
 |---|---|---|
 | 1 | Miembro avisa la cancelación a Recepción | |
 | 2 | Recepción comprueba si faltan menos de 4 h para el inicio de la reserva | |
-| 3 | Recepción anota el cobro en la hoja de cálculo | El cobro se anota a mano y depende de su criterio: hoy aplica del 10 al 20 % según si había otras solicitudes (experto, sesión 2) |
+| 3 | Recepción anota el cobro en la hoja de cálculo | El cobro se anota a mano y depende de su criterio: hoy aplica del 10 al 20 % según si había otras solicitudes (experto) |
 | 4 | Facturación y cobros suma el cobro a la factura mensual | |
 | 5 | Recepción libera la franja en la hoja de cálculo y el calendario compartido | La franja se libera a mano |
 | 6 | Recepción envía el aviso de sala liberada por WhatsApp a las personas en lista de espera | Recepción tiene que estar pendiente de quién espera |

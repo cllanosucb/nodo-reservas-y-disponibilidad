@@ -98,7 +98,7 @@ Los nombres de los eventos son los de [03-eventstorming.md](03-eventstorming.md)
 
 ### Por qué algunas líneas combinan dos patrones o dos mecanismos
 
-Cada combinación responde a un lado distinto de la relación o a un sentido distinto del flujo; no son dos alternativas para lo mismo (observación de la sesión 4: «se pueden combinar, pero hay que justificarlo»).
+Cada combinación responde a un lado distinto de la relación o a un sentido distinto del flujo; no son dos alternativas para lo mismo.
 
 | Línea | Combinación | Justificación |
 |---|---|---|

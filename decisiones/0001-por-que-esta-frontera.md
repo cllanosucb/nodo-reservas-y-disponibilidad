@@ -22,7 +22,7 @@ Dividimos el área en dos bounded contexts, los dos core:
 
 ## Evidencia, herramienta por herramienta
 
-La sesión 3 pidió justificar cada frontera con los cinco elementos, no solo con el glosario. Las cinco señalan la misma frontera:
+La frontera se justifica con cinco elementos, no solo con el glosario. Los cinco señalan la misma frontera:
 
 | Herramienta | Qué muestra | Dónde |
 |---|---|---|
@@ -39,7 +39,7 @@ La sesión 3 pidió justificar cada frontera con los cinco elementos, no solo co
 - **Penalización y horas extra en Tarifas y precios.** Reserva decide *cuándo* aplican; Tarifas y precios entrega el precio vigente de la franja. La penalización es la franja completa.
 
 ## Consecuencias
-- Cada contexto tiene su carpeta en `src/` y su sección en el glosario.
+- Cada contexto tiene su sección en el glosario y su módulo en el prototipo (`src/Disponibilidad` y `src/Reserva` del [repositorio del prototipo](../src/README.md)).
 - Entre ambos cruza información en los dos sentidos (línea ① de [docs/05-context-map.md](../docs/05-context-map.md)):
   - Reserva le **pide** a Disponibilidad que ocupe la franja **antes de confirmar**, con una llamada en proceso: la reserva se confirma solo si la franja quedó ocupada (INV-R1; ver [0003-patrones-de-integracion.md](0003-patrones-de-integracion.md)).
   - Disponibilidad **escucha** *Reserva cancelada* y *Solicitud expirada* para liberar la franja (P-07, P-11).

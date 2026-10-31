@@ -213,11 +213,11 @@ Cada política del EventStorming tiene un componente que la ejecuta: un applicat
 
 ## 8. Lectura, módulos y lo que no se crea
 
-**Modelo de lectura «Salas disponibles»: CQRS ligero, justificado.** Escribir necesita el aggregate con sus reglas (`AgendaDelRecurso.ocupar`); mostrar qué está libre solo necesita datos planos de todas las salas y equipos de un día. Por eso «Salas disponibles» es una consulta aparte que devuelve una vista sin reglas y nunca decide si una franja cabe: eso lo decide la agenda cuando alguien intenta ocuparla. No se separa el almacenamiento (CQRS completo) porque lectura y escritura todavía no divergen tanto como para pagar dos modelos (sesión 6).
+**Modelo de lectura «Salas disponibles»: CQRS ligero, justificado.** Escribir necesita el aggregate con sus reglas (`AgendaDelRecurso.ocupar`); mostrar qué está libre solo necesita datos planos de todas las salas y equipos de un día. Por eso «Salas disponibles» es una consulta aparte que devuelve una vista sin reglas y nunca decide si una franja cabe: eso lo decide la agenda cuando alguien intenta ocuparla. No se separa el almacenamiento (CQRS completo) porque lectura y escritura todavía no divergen tanto como para pagar dos modelos.
 
 **Módulos por concepto, no por capa técnica.** Cada bounded context es un módulo del monolito con el nombre del glosario (Disponibilidad, Reserva); dentro, su dominio, su aplicación y su infraestructura. Los nombres de clases y métodos son los del glosario: `AgendaDelRecurso.ocupar`, `Reserva.cancelar`, `ListaDeEspera.añadir`.
 
-**Lo que se decidió no crear** (sesión 6: «diseñar también es decidir qué no crear»):
+**Lo que se decidió no crear:**
 
 | No se crea | Por qué |
 |---|---|
@@ -236,6 +236,7 @@ Cada política del EventStorming tiene un componente que la ejecuta: un applicat
 |---|---|
 | D-57 | Franja ocupada al solicitar: la solicitud se rechaza y la persona se añade a la lista de espera. |
 | D-58 | Componentes en pseudocódigo neutro; lenguaje y estructura de carpetas pendientes hasta el prototipo; repositorios en memoria. |
+| D-71 | El prototipo se implementó en Laravel con Docker, en un repositorio aparte; cada bounded context es un módulo con dominio, aplicación e infraestructura ([src/README.md](../src/README.md)). |
 | D-59 | Ningún domain service: cada regla tiene dueño. |
 | D-60 | Expirar solicitudes vencidas: application service periódico, solo en la tabla. |
 | D-65 | «Salas disponibles» es una consulta de solo lectura (CQRS ligero), no un aggregate. |

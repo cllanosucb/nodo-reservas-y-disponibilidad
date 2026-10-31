@@ -2,7 +2,7 @@
 
 > **Curso:** Fundamentos de Domain-Driven Design · **Caso:** Nodo (coworking y eventos)
 > **Área del grupo:** Reservas y disponibilidad (core)
-> **Estado:** diseño estratégico, integración, modelo y componentes terminados — prototipo pendiente
+> **Estado:** diseño estratégico, integración, modelo, componentes y prototipo terminados — el prototipo está en un [repositorio aparte](src/README.md)
 
 ---
 
@@ -11,8 +11,8 @@
 | Integrante | Rol |
 |---|---|
 | Carlos Llanos Rodriguez | Subdominios, glosario y modelo |
-| David Almaraz | EventStorming, domain stories y componentes |
-| Jhoann Guerrero | Context map, integración, reglas e invariantes y decisiones |
+| David Cancio Almaraz Menacho | EventStorming, domain stories y componentes |
+| Jhoann Guerrero Cata | Context map, integración, reglas e invariantes y decisiones |
 
 ---
 
@@ -146,7 +146,7 @@ Detalle: [docs/08-modelo.md](docs/08-modelo.md)
 | Pieza | Decisión |
 |---|---|
 | **Domain services** | Ninguno: cada regla tiene dueño (`AgendaDelRecurso.ocupar`, `Reserva.confirmar`, `PolíticaDeCancelación`). |
-| **Repositories** | Uno por raíz: Reserva, Agenda del recurso y Lista de espera. En el prototipo, en memoria. |
+| **Repositories** | Uno por raíz: Reserva, Agenda del recurso y Lista de espera. En el prototipo: en memoria para los tests y PostgreSQL para la aplicación. |
 | **Factories** | Sin clases factory: `Reserva.solicitar(...)`, `AgendaDelRecurso.abrir(...)` y `ListaDeEspera.abrir(...)`. |
 | **Application services** | Coordinan, no deciden. Caso principal: **SolicitarReserva**. |
 
@@ -158,7 +158,7 @@ Detalle (pseudocódigo y flujos): [docs/09-componentes.md](docs/09-componentes.m
 
 ## 8. Estado del proyecto
 
-**Diseño estratégico, integración, modelo y componentes terminados — prototipo pendiente.**
+**Diseño estratégico, integración, modelo, componentes y prototipo terminados.**
 
 | Artefacto | Documento | Estado |
 |---|---|---|
@@ -172,9 +172,11 @@ Detalle (pseudocódigo y flujos): [docs/09-componentes.md](docs/09-componentes.m
 | Modelo (entidades, value objects, aggregates y domain events) | [docs/08-modelo.md](docs/08-modelo.md) | Terminado |
 | Componentes (domain services, repositorios, factories y application services) | [docs/09-componentes.md](docs/09-componentes.md) | Terminado |
 | Decisiones (ADR 0001 a 0003) | [decisiones/](decisiones/) | Terminado |
-| Prototipo por bounded context | `src/` | Pendiente |
+| Prototipo (Laravel + Docker, en un repositorio aparte) | [src/README.md](src/README.md) | Terminado |
 
 Los artefactos visuales están en el tablero de Miro del proyecto; cada documento muestra la imagen exportada del frame correspondiente.
+
+**Prototipo:** [github.com/davidcancioalmaraz/nodo-cowork](https://github.com/davidcancioalmaraz/nodo-cowork). Qué implementa, la versión entregada y cómo ejecutarlo: [src/README.md](src/README.md).
 
 ---
 
@@ -199,4 +201,5 @@ nodo-reservas-y-disponibilidad/
 │   ├── 0002-clasificacion-del-area.md
 │   └── 0003-patrones-de-integracion.md
 └── src/
+    └── README.md     enlace al prototipo y cómo ejecutarlo
 ```

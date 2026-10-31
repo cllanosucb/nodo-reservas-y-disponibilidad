@@ -132,7 +132,7 @@ Para cada vecino: **qué le pedimos**, **qué le entregamos**, el **dato o event
 | **Le entregamos** | La asignación de una **unidad de equipo portátil** para la franja de un evento del salón, o la respuesta «no disponible». |
 | **Nos pide** | Ocupar o liberar una unidad de equipo (proyector, televisor) en la franja del evento. |
 | **Datos que cruzan** | tipo de equipo, franja del evento, identificador del evento (como referencia de la ocupación). |
-| **Por qué existe esta línea** | El proyector y los televisores son los mismos para las salas y para el salón (sesión 5: «si está usado en el salón no se puede dar en la sala de capacitación»). Si cada área llevara su propia agenda del equipo, el mismo proyector podría prometerse dos veces. Quien decide si un recurso está libre en una franja es nuestra área (R-08). |
+| **Por qué existe esta línea** | El proyector y los televisores son los mismos para las salas y para el salón (experto: «si está usado en el salón no se puede dar en la sala de capacitación»). Si cada área llevara su propia agenda del equipo, el mismo proyector podría prometerse dos veces. Quien decide si un recurso está libre en una franja es nuestra área (R-08). |
 | **Hotspots resueltos** | **HI-21:** el equipo compartido se agenda en un solo lugar, Disponibilidad; Agenda de eventos lo ocupa como cualquier otra reserva. El salón y las salas siguen sin cruzarse (Separate Ways). |
 
 ---

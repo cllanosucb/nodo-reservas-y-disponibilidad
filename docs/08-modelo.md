@@ -230,7 +230,7 @@ Cada aggregate se guarda en su propia transacción. Entre aggregates viajan llam
 
 ## 7. Trazabilidad con el EventStorming: de la nota naranja al aggregate
 
-Cada domain event del modelo sale de una nota naranja del muro ([03-eventstorming.md](03-eventstorming.md)) con **el mismo nombre** (sesión 5: «los domain events de los aggregates tienen que coincidir con el EventStorming»).
+Cada domain event del modelo sale de una nota naranja del muro ([03-eventstorming.md](03-eventstorming.md)) con **el mismo nombre**.
 
 | Evento del muro | Línea del muro | Lo emite | Método |
 |---|---|---|---|

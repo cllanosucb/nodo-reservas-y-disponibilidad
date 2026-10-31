@@ -66,10 +66,7 @@ La decisión de clasificación y sus hotspots están en [decisiones/0002-clasifi
 | Recepción | Gestiona hoy las reservas en el calendario compartido, registra reservas a nombre de otra persona, envía a mano los avisos por WhatsApp y abre la puerta a los visitantes. |
 | Responsable de operaciones | Es quien relata la entrevista: reglas de reserva, margen de 15 min, cancelación y cuándo una reserva está confirmada. Junto con la dirección, aprueba los eventos. |
 | Dirección | Fija y ajusta las tarifas, y aprueba los eventos antes de confirmarlos. |
-<<<<<<< HEAD
-=======
 | Miembro | Usuario diario: sabe cómo pide hoy una sala, qué información necesita ver para elegirla y qué le molesta del proceso actual (depender de recepción, avisos que no llegan). |
 | Visitante | Usuario sin membresía: aporta el caso de quien reserva y paga por su cuenta, sin plan ni horas incluidas. |
 
-Los usuarios también son expertos del dominio: viven el proceso real y aportan los casos que el equipo de Nodo no siempre ve (sesión 1).
->>>>>>> 736506b707297628417a878d849e4947bc782029
+Los usuarios también son expertos del dominio: viven el proceso real y aportan los casos que el equipo de Nodo no siempre ve.
